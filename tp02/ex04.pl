@@ -12,3 +12,13 @@ factorial(N, F) :-
     N > 0,
     N1 is N - 1, factorial(N1, F1),
     F is N * F1.
+
+
+factorial2(N, F) :- factorial_2(N, F, 1).
+
+factorial_2(1, F, F).
+factorial_2(N, F, Acc) :- 
+    N > 1,
+    N1 is N - 1,
+    Acc1 is Acc * N,
+    factorial_2(N1, F, Acc1).
