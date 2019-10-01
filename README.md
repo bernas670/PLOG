@@ -8,6 +8,15 @@ Repository of code developed for the course PLOG (Logic Programming) at FEUP
 
 ### Table of Contents
 * [**TP01**](#tp01) - Representação de Conhecimento em Prolog
+* [**TP02**](#tp02) - Controlo e Recursividade em Prolog
+* [Other Resources](#other-resources)
 
 #### TP01
 * **Specification** : [Portuguese](specifications/tp01.pdf)
+
+#### TP02
+* **Specification** : [Portuguese](specifications/tp02.pdf)
+
+
+#### Other Resources
+* [Comparison Operators](http://www.cse.unsw.edu.au/~billw/dictionaries/prolog/comparison.html)
