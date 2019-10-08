@@ -26,4 +26,4 @@ Repository of code developed for the course PLOG (Logic Programming) at FEUP
 * [Comparison Operators](http://www.cse.unsw.edu.au/~billw/dictionaries/prolog/comparison.html)
 * [Unification](http://www.cse.unsw.edu.au/~billw/dictionaries/prolog/unification.html)
 * [is Operator](http://www.cse.unsw.edu.au/~billw/dictionaries/prolog/is.html)
-* [Lists] (https://www.doc.gold.ac.uk/~mas02gw/prolog_tutorial/prologpages/lists.html)
+* [Lists](https://www.doc.gold.ac.uk/~mas02gw/prolog_tutorial/prologpages/lists.html)
