@@ -24,6 +24,7 @@ Repository of code developed for the course PLOG (Logic Programming) at FEUP
 
 #### PROJ1
 * **Specification** : [Portuguese](specifications/proj1.pdf) 
+* **Intermediate report** : [Portuguese](https://docs.google.com/document/d/1h0ecwN33NjEER6WkghdzHKuNhX6ZsZjYxlBN_lPkLys/edit)
 
 
 #### Other Resources
