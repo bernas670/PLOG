@@ -10,6 +10,7 @@ Repository of code developed for the course PLOG (Logic Programming) at FEUP
 * [**TP01**](#tp01) - Representação de Conhecimento em Prolog
 * [**TP02**](#tp02) - Controlo e Recursividade em Prolog
 * [**TP03**](#tp03) - Utilização de Listas em Prolog
+* [**Proj1**](#proj1) - Aplicação em Prolog para um Jogo de Tabuleiro
 * [Other Resources](#other-resources)
 
 #### TP01
@@ -20,6 +21,10 @@ Repository of code developed for the course PLOG (Logic Programming) at FEUP
 
 #### TP03
 * **Specification** : [Portuguese](specifications/tp03.pdf)
+
+#### PROJ1
+* **Specification** : [Portuguese](specifications/proj1.pdf) 
+* **Intermediate report** : [Portuguese](https://docs.google.com/document/d/1h0ecwN33NjEER6WkghdzHKuNhX6ZsZjYxlBN_lPkLys/edit)
 
 
 #### Other Resources
