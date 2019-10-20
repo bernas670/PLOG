@@ -1,6 +1,6 @@
 print_board_rec([], _, _).
 print_board_rec([L|T], N, Axis) :-
-    format('~|~`0t~d~2+', [N]),
+    format('   ~|~`0t~d~2+', [N]),
     print_line(L),
     print_separator(N, Axis),
     N1 is N + 1,
@@ -8,18 +8,19 @@ print_board_rec([L|T], N, Axis) :-
     print_board_rec(T, N1, Axis1).
 
 print_separator(10, _) :-
-    format('~n   ┼────┼────┼────┼────┼────┼────┼────┼────┼────┼────┼ ~n').
+    format('~n      ┼────┼────┼────┼────┼────┼────┼────┼────┼────┼────┼ ~n').
 print_separator(N, A) :-
     N < 10,
-    format('~n   ┼────┼────┼────┼────┼────┼────┼────┼────┼────┼────┼ ~c~n', [A]).
+    format('~n      ┼────┼────┼────┼────┼────┼────┼────┼────┼────┼────┼ ~c~n', [A]).
 
 
 print_board(B) :-
-    write('     01   02   03   04   05   06   07   08   09   10   '), nl,
-    write('   ┼────┼────┼────┼────┼────┼────┼────┼────┼────┼────┼ '), nl,
+    nl,
+    write('        01   02   03   04   05   06   07   08   09   10   '), nl,
+    write('      ┼────┼────┼────┼────┼────┼────┼────┼────┼────┼────┼ '), nl,
     print_board_rec(B, 1, 65),
-    write('        R    Q    P    O    N    M    L    K    J      '), nl,
-    !.
+    write('           R    Q    P    O    N    M    L    K    J      '), nl,
+    nl, !.
 
 
 print_line([]) :-
