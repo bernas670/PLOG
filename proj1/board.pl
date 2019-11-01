@@ -1,3 +1,5 @@
+:- use_module(library(ansi_term)).
+
 print_board_rec([], _, _).
 print_board_rec([L|T], N, Axis) :-
     format('   ~|~`0t~d~2+', [N]),
