@@ -1,3 +1,5 @@
+% TODO: make the board size dynamic
+
 
 % Initial state of the board
 initialBoard([ 

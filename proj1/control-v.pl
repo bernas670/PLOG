@@ -1,6 +1,4 @@
-:- consult('menus.pl').
-:- consult('display.pl').
-
+:- consult('main-menu.pl').
 
 controlV :-
     mainMenu.
