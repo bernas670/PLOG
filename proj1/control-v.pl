@@ -4,5 +4,5 @@
 :- include('utilities.pl').
 :- include('input.pl').
 
-controlV :-
+play :-
     mainMenu.
