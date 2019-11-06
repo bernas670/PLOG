@@ -28,3 +28,12 @@ setMatrixItem([H|T], Row, Column, Item, [H|NewT]) :-
     Row > 0,
     NewRow is Row - 1,
     setMatrixItem(T, NewRow, Column, Item, NewT).
+
+copyList([], []).
+copyList([H|OriginT], [H|CopyT]) :-
+    copyList(OriginT, CopyT).
+
+copyMatrix([], []).
+copyMatrix([OriginH|OriginT], [CopyH|CopyT]) :-
+    copyList(OriginH, CopyH),
+    copyMatrix(OriginT, CopyT).
