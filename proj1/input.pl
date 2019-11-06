@@ -32,14 +32,20 @@ validateAxis('B', Axis) :- Axis is 1.
 validateAxis('C', Axis) :- Axis is 2.
 validateAxis('D', Axis) :- Axis is 3.
 validateAxis('E', Axis) :- Axis is 4.
-validateAxis('J', Axis) :- Axis is 5.
-validateAxis('K', Axis) :- Axis is 6.
-validateAxis('L', Axis) :- Axis is 7.
-validateAxis('M', Axis) :- Axis is 8.
-validateAxis('N', Axis) :- Axis is 9.
-validateAxis('O', Axis) :- Axis is 10.
-validateAxis('P', Axis) :- Axis is 11.
-validateAxis('Q', Axis) :- Axis is 12.
-validateAxis('R', Axis) :- Axis is 13.
+validateAxis('F', Axis) :- Axis is 5.
+validateAxis('G', Axis) :- Axis is 6.
+validateAxis('H', Axis) :- Axis is 7.
+validateAxis('I', Axis) :- Axis is 8.
+
+validateAxis('J', Axis) :- Axis is 0.
+validateAxis('K', Axis) :- Axis is 1.
+validateAxis('L', Axis) :- Axis is 2.
+validateAxis('M', Axis) :- Axis is 3.
+validateAxis('N', Axis) :- Axis is 4.
+validateAxis('O', Axis) :- Axis is 5.
+validateAxis('P', Axis) :- Axis is 6.
+validateAxis('Q', Axis) :- Axis is 7.
+validateAxis('R', Axis) :- Axis is 8.
+
 validateAxis(_Input, Axis) :- askAxis(Axis).
 
