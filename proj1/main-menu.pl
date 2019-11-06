@@ -1,5 +1,3 @@
-:- consult('logic.pl').
-
 % TODO: beautify the main menu
 
 
