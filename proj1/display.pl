@@ -14,6 +14,12 @@ initialBoard([
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]).
 
+% Piece's name
+pieceName(0, 'Empty Cell').
+pieceName(1, 'Player Piece').
+pieceName(2, 'Player Piece').
+pieceName(3, 'Castle').
+
 % Piece's colors
 pieceColor(0, black).      % empty slot
 pieceColor(1, red).        % player 1 pieces
@@ -36,6 +42,7 @@ printMatrix([], _, _).
 printMatrix([Line|Tail], LineIndex, AxisLetter) :-
     ansi_format([bg(black)], '  ~|~`0t~d~2+', [LineIndex]),
     printLine(Line),
+    % FIXME: J is printing on the right side of the board but it shouldn't
     printDivider(AxisLetter),
     NewLineIndex is LineIndex + 1,
     NewAxisLetter is AxisLetter + 1,
