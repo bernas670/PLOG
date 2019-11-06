@@ -47,46 +47,46 @@ isEmpty(Board, Row, Column) :-
     getMatrixItem(Board, Row, Column, Piece),
     Piece == 0.
 
-% TODO: get list with the block positions
-getBlockPositions(Board, Block, Row, Column, NewBoard) :-
+% Returns a list of positions (NewPositions) with the coordinates of 
+getBlockPositions(Board, Block, Row, Column, NewBoard, Positions, NewPositions) :-
     Row >= 0, Row =< 9,
     Column >= 0, Column =< 9,
     !,
     getMatrixItem(Board, Row, Column, Item),
+    % check if the cell on the given position contains the expected piece
     ((Block == Item) ->
-        (
-            nl, ansi_format([bg(cyan), fg(white)], '             Row : ~d  Column : ~d            ', [Row, Column]), nl,
+        (   % if the pieces match keep searching
             setMatrixItem(Board, Row, Column, 0, NewBoard1),
-
-            nl, ansi_format([bg(black), fg(red)], '             Row : ~d  Column : ~d            ', [Row, Column]), nl,    
+            append([Row], [Column], Coords),
+            append([Coords], Positions, NewPositions1),
+            % check the cell bellow
             Row1 is Row + 1,
-            ansi_format([bg(black), fg(red)], 'it ... Row : ~d  Column : ~d            ', [Row1, Column]), nl,
-            getBlockPositions(NewBoard1, Block, Row1, Column, NewBoard2),
-        
-            nl, ansi_format([bg(black), fg(red)], '             Row : ~d  Column : ~d            ', [Row, Column]), nl,    
+            getBlockPositions(NewBoard1, Block, Row1, Column, NewBoard2, NewPositions1, NewPositions2),
+            % check the cell above
             Row2 is Row - 1,
-            ansi_format([bg(black), fg(red)], 'it ... Row : ~d  Column : ~d            ', [Row2, Column]), nl,
-            getBlockPositions(NewBoard2, Block, Row2, Column, NewBoard3),
-        
-            nl, ansi_format([bg(black), fg(red)], '             Row : ~d  Column : ~d            ', [Row, Column]), nl,    
+            getBlockPositions(NewBoard2, Block, Row2, Column, NewBoard3, NewPositions2, NewPositions3),
+            %check the cell to the right
             Column1 is Column + 1,
-            ansi_format([bg(black), fg(red)], 'it ... Row : ~d  Column : ~d            ', [Row, Column1]), nl,
-            getBlockPositions(NewBoard3, Block, Row, Column1, NewBoard4),
-        
-            nl, ansi_format([bg(black), fg(red)], '             Row : ~d  Column : ~d            ', [Row, Column]), nl,                
+            getBlockPositions(NewBoard3, Block, Row, Column1, NewBoard4, NewPositions3, NewPositions4),
+            % check the cell to the left
             Column2 is Column - 1,
-            ansi_format([bg(black), fg(red)], 'it ... Row : ~d  Column : ~d            ', [Row, Column2]), nl, 
-            getBlockPositions(NewBoard4, Block, Row, Column2, NewBoard)
-
+            getBlockPositions(NewBoard4, Block, Row, Column2, NewBoard, NewPositions4, NewPositions)
         );
-        (
-            copyMatrix(Board, NewBoard)
+        (   % in case they don't match return 
+            copyMatrix(Board, NewBoard),
+            copyList(Positions, NewPositions)
         )
     ).
 
-getBlockPositions(Board, _, _, _, NewBoard) :-
-    copyMatrix(Board, NewBoard).
+% If the Row or Column parameters are invalid return
+getBlockPositions(Board, _Block, _Row, _Column, NewBoard, Positions, NewPositions) :-
+    copyMatrix(Board, NewBoard),
+    copyList(Positions, NewPositions).
 
+%   ------------------------------------
+%      FUNCTIONS FOR TESTING PURPOSES
+%   ------------------------------------
+%   TODO: remove these when done testing
 
 finalBoard([ 
     [0, 1, 1, 0, 2, 1, 1, 2, 2, 3],
@@ -103,8 +103,9 @@ finalBoard([
 testPos :- 
     finalBoard(Board),
     printBoard(Board),
-    getBlockPositions(Board, 2, 8, 2, NewBoard),
+    getBlockPositions(Board, 2, 8, 2, NewBoard, [], Pos),
     write('Result'), nl,
-    printBoard(NewBoard).
+    printBoard(NewBoard),
+    write(Pos).
 
 
