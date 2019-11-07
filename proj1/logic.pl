@@ -90,10 +90,10 @@ gameOver(Board,Winner):-
     value(Board,1,C1),
     value(Board,2,C2),
     (   C1 > C2 ->
-    ansi_format([bg(black), fg(red)], '                         PLAYER 1 WON :D                         ', [Player]), nl
+    ansi_format([bg(black), fg(red)], '                         PLAYER 1 WON :D                         ',[]), nl
     ;   C1 =:= C2 ->
-    ansi_format([bg(black), fg(red)], '                         ITS A DRAW :S                         ', [Player]), nl
-    ;   ansi_format([bg(black), fg(red)], '                     PLAYER 2 WON :D                         ', [Player]), nl
+    ansi_format([bg(black), fg(red)], '                         ITS A DRAW :S                         ',[]), nl
+    ;   ansi_format([bg(black), fg(red)], '                     PLAYER 2 WON :D                         ',[]), nl
     ).
 
 %   ------------------------------------
