@@ -37,3 +37,14 @@ copyMatrix([], []).
 copyMatrix([OriginH|OriginT], [CopyH|CopyT]) :-
     copyList(OriginH, CopyH),
     copyMatrix(OriginT, CopyT).
+
+
+countItemsList([], Item, 0).
+countItemsList([H|T], Item, Count) :-
+    Item == H,
+    !,
+    countItemsList(T, Item, Count1),
+    Count is Count1 + 1.
+countItemsList([_|T], Item, Count) :-
+    countItemsList(T, Item, Count).
+    
