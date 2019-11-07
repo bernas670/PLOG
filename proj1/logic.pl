@@ -83,6 +83,14 @@ getBlockPositions(Board, _Block, _Row, _Column, NewBoard, Positions, NewPosition
     copyMatrix(Board, NewBoard),
     copyList(Positions, NewPositions).
 
+value(Board,Player,Value):-
+    countItemsMatrix(Board,Player,Value).
+
+gameOver(Board,Winner):-
+    value(Board,1,C1),
+    value(Board,2,C2).
+    % fazer os if e dar print a quem ganhou
+
 %   ------------------------------------
 %      FUNCTIONS FOR TESTING PURPOSES
 %   ------------------------------------
