@@ -4,9 +4,27 @@ startGame(Player1, Player2) :-
     printBoard(InitialBoard),
     addCastles(InitialBoard, CastleBoard, Player1, Player2),
     addStartPieces(CastleBoard, StartPiecesBoard, Player1, Player2),
-    % TODO: remove the write, it's only here because of the singleton error
-    write(StartPiecesBoard),
-    nl, nl, write('Exit'), nl, nl.
+    % TODO: remove this, it's only here because of the singleton warning
+    write(StartPiecesBoard).
+
+/*
+    gameLoop(StartPiecesBoard, Player1, Player2).
+
+gameLoop(Board, Player1, Player2) :-
+    makeMove(Board, Player1, NewBoard, 1),
+    makeMove(NewBoard, Player2, NewBoard2, 2),
+    gameLoop(NewBoard2, Player1, Player2).
+
+% TODO:
+makeMove(_Board, 'C', _NewBoard, _PlayerPiece) :-
+    nl, ansi_format([bg(black), fg(red)], '                       Under construction :)                       ', []), nl.
+
+makeMove(Board, 'P', NewBoard, PlayerPiece) :-
+    valid_moves(Board, PlayerPiece, ListOfMoves),
+    write(ListOfMoves), nl.
+
+valid_moves(Board, PlayerPiece, ListOfMoves)
+*/
 
 % TODO:
 addCastles(_, _, _, 'C') :-
@@ -47,7 +65,8 @@ isEmpty(Board, Row, Column) :-
     getMatrixItem(Board, Row, Column, Piece),
     Piece == 0.
 
-% Returns a list of positions (NewPositions) with the coordinates of 
+% Returns a list of positions (NewPositions) with the coordinates of the blocks
+% Positions must be an empty list
 getBlockPositions(Board, Block, Row, Column, NewBoard, Positions, NewPositions) :-
     Row >= 0, Row =< 9,
     Column >= 0, Column =< 9,
