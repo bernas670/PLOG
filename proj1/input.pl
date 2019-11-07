@@ -20,32 +20,48 @@ validateCoord(09, Coord, _String) :- Coord is 8.
 validateCoord(10, Coord, _String) :- Coord is 9.
 validateCoord(_Input, Coord, String) :- askCoord(Coord, String).
 
+% TODO: implement a term that clears the input buffer
+askAxis(Axis, String) :-
+    ansi_format([bg(black)], '    ~w Axis  ', [String]),
+    get_char(Input),
+    validateAxis(Input, Axis, String).
 
-% FIXME: not working
-askAxis(Axis) :-
-    ansi_format([bg(black)], '    Axis  ', []),
-    read(Input),
-    validateAxis(Input, Axis).
+validateAxis('A', Axis, 'Horizontal') :- Axis is 0.
+validateAxis('B', Axis, 'Horizontal') :- Axis is 1.
+validateAxis('C', Axis, 'Horizontal') :- Axis is 2.
+validateAxis('D', Axis, 'Horizontal') :- Axis is 3.
+validateAxis('E', Axis, 'Horizontal') :- Axis is 4.
+validateAxis('F', Axis, 'Horizontal') :- Axis is 5.
+validateAxis('G', Axis, 'Horizontal') :- Axis is 6.
+validateAxis('H', Axis, 'Horizontal') :- Axis is 7.
+validateAxis('I', Axis, 'Horizontal') :- Axis is 8.
 
-validateAxis('A', Axis) :- Axis is 0.
-validateAxis('B', Axis) :- Axis is 1.
-validateAxis('C', Axis) :- Axis is 2.
-validateAxis('D', Axis) :- Axis is 3.
-validateAxis('E', Axis) :- Axis is 4.
-validateAxis('F', Axis) :- Axis is 5.
-validateAxis('G', Axis) :- Axis is 6.
-validateAxis('H', Axis) :- Axis is 7.
-validateAxis('I', Axis) :- Axis is 8.
+validateAxis('J', Axis, 'Vertical') :- Axis is 0.
+validateAxis('K', Axis, 'Vertical') :- Axis is 1.
+validateAxis('L', Axis, 'Vertical') :- Axis is 2.
+validateAxis('M', Axis, 'Vertical') :- Axis is 3.
+validateAxis('N', Axis, 'Vertical') :- Axis is 4.
+validateAxis('O', Axis, 'Vertical') :- Axis is 5.
+validateAxis('P', Axis, 'Vertical') :- Axis is 6.
+validateAxis('Q', Axis, 'Vertical') :- Axis is 7.
+validateAxis('R', Axis, 'Vertical') :- Axis is 8.
 
-validateAxis('J', Axis) :- Axis is 0.
-validateAxis('K', Axis) :- Axis is 1.
-validateAxis('L', Axis) :- Axis is 2.
-validateAxis('M', Axis) :- Axis is 3.
-validateAxis('N', Axis) :- Axis is 4.
-validateAxis('O', Axis) :- Axis is 5.
-validateAxis('P', Axis) :- Axis is 6.
-validateAxis('Q', Axis) :- Axis is 7.
-validateAxis('R', Axis) :- Axis is 8.
+validateAxis(_Input, Axis, String) :- askAxis(Axis, String).
 
-validateAxis(_Input, Axis) :- askAxis(Axis).
 
+/*
+    readInteger(Integer) :-
+        readInput(Integer),
+        integer(Integer).
+
+    readInput(Input) :-
+        get0(Char),
+        readRest(Char, String),
+        name(Input, String).
+
+    readRest(10, []).
+    readRest(13, []).
+    readRest(Char, [Char|Rest]) :-
+        get0(Char1),
+        readRest(Char1, Rest).
+*/
