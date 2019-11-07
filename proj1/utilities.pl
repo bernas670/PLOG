@@ -48,8 +48,17 @@ countItemsList([H|T], Item, Count) :-
 countItemsList([_|T], Item, Count) :-
     countItemsList(T, Item, Count).
 
+countItemsMatrix([], _Item, 0).
+countItemsMatrix([H|T], Item, Count):-
+    countItemsList(H, Item, Count2),
+    countItemsMatrix(T, Item, Count1),
+    Count is Count1 + Count2.
+
 % Get the column with ColIndex from a matrix
 getMatrixColumn([], _Column, []).
 getMatrixColumn([PositionsH|PositionsT], ColIndex, [RowH|RowT]) :-
     getListItem(PositionsH, ColIndex, RowH),
     getMatrixColumn(PositionsT, ColIndex, RowT).
+
+
+

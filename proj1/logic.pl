@@ -102,22 +102,35 @@ getBlockPositions(Board, _Block, _Row, _Column, NewBoard, Positions, NewPosition
     copyMatrix(Board, NewBoard),
     copyList(Positions, NewPositions).
 
+value(Board,Player,Value):-
+    countItemsMatrix(Board,Player,Value).
+
+gameOver(Board,Winner):-
+    value(Board,1,C1),
+    value(Board,2,C2),
+    (   C1 > C2 ->
+    ansi_format([bg(black), fg(red)], '                         PLAYER 1 WON :D                         ',[]), nl
+    ;   C1 =:= C2 ->
+    ansi_format([bg(black), fg(red)], '                         ITS A DRAW :S                         ',[]), nl
+    ;   ansi_format([bg(black), fg(red)], '                     PLAYER 2 WON :D                         ',[]), nl
+    ).
+
 %   ------------------------------------
 %      FUNCTIONS FOR TESTING PURPOSES
 %   ------------------------------------
 %   TODO: remove these when done testing
 
 finalBoard([ 
-    [0, 1, 1, 0, 2, 1, 1, 2, 2, 3],
+    [1, 1, 1, 0, 2, 1, 1, 2, 2, 3],
     [0, 1, 1, 0, 2, 1, 1, 2, 2, 0],
     [0, 0, 0, 0, 2, 1, 1, 1, 1, 0],
     [1, 1, 1, 1, 2, 3, 0, 2, 2, 0],
     [1, 1, 1, 1, 0, 0, 0, 2, 2, 0],
-    [0, 0, 2, 2, 0, 0, 2, 2, 0, 0],
-    [2, 2, 0, 3, 0, 0, 0, 3, 0, 0],
+    [0, 0, 2, 2, 0, 2, 2, 2, 0, 0],
+    [2, 2, 2, 3, 0, 0, 0, 3, 0, 0],
     [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
-    [2, 2, 2, 2, 0, 0, 2, 2, 0, 0],
-    [2, 2, 2, 2, 0, 0, 2, 2, 0, 0]]).
+    [2, 2, 2, 2, 1, 1, 2, 2, 0, 0],
+    [2, 2, 2, 2, 1, 1, 2, 2, 0, 0]]).
 
 testPos :- 
     finalBoard(Board),
@@ -126,5 +139,10 @@ testPos :-
     write('Result'), nl,
     printBoard(NewBoard),
     write(Pos).
+
+testeValue:-
+    finalBoard(Board),
+    printBoard(Board),
+    gameOver(Board,Winner).
 
 
