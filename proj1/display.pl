@@ -71,3 +71,4 @@ printCell(Cell) :-
 % TEST THE DISPLAY METHOD ON THE INITIAL BOARD
 testPrint :- initialBoard(Board), printBoard(Board).
 
+
