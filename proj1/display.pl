@@ -67,7 +67,12 @@ printCell(Cell) :-
     pieceColor(Cell, Color),
     ansi_format([bg(Color)], '  ', []).
 
+updateBoard(Board, [], _Piece, NewBoard) :-
+    copyMatrix(Board, NewBoard).
+updateBoard(Board, [HPos|TPos], Piece, NewBoard) :-
+    getListItem(HPos, 0, Row),
+    getListItem(HPos, 1, Column),
+    setMatrixItem(Board, Row, Column, Piece, NewBoard1),
+    updateBoard(NewBoard1, TPos, Piece, NewBoard).
 
-% TEST THE DISPLAY METHOD ON THE INITIAL BOARD
-testPrint :- initialBoard(Board), printBoard(Board).
 

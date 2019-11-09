@@ -102,6 +102,8 @@ getBlockPositions(Board, _Block, _Row, _Column, NewBoard, Positions, NewPosition
     copyMatrix(Board, NewBoard),
     copyList(Positions, NewPositions).
 
+
+
 value(Board,Player,Value):-
     countItemsMatrix(Board,Player,Value).
 
@@ -116,36 +118,3 @@ gameOver(Board,Winner):-
     ),
     % TODO: remove this, it's only here because of the singleton warning
     write(Winner), nl.
-
-%   ------------------------------------
-%      FUNCTIONS FOR TESTING PURPOSES
-%   ------------------------------------
-%   TODO: remove these when done testing
-
-finalBoard([ 
-    [1, 1, 1, 0, 2, 1, 1, 2, 2, 3],
-    [0, 1, 1, 0, 2, 1, 1, 2, 2, 0],
-    [0, 0, 0, 0, 2, 1, 1, 1, 1, 0],
-    [1, 1, 1, 1, 2, 3, 0, 2, 2, 0],
-    [1, 1, 1, 1, 0, 0, 0, 2, 2, 0],
-    [0, 0, 2, 2, 0, 2, 2, 2, 0, 0],
-    [2, 2, 2, 3, 0, 0, 0, 3, 0, 0],
-    [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
-    [2, 2, 2, 2, 1, 1, 2, 2, 0, 0],
-    [2, 2, 2, 2, 1, 1, 2, 2, 0, 0]]).
-
-testPos :- 
-    finalBoard(Board),
-    printBoard(Board),
-    getBlockPositions(Board, 2, 8, 2, NewBoard, [], Pos),
-    write('Result'), nl,
-    printBoard(NewBoard),
-    write(Pos).
-
-testeValue:-
-    finalBoard(Board),
-    printBoard(Board),
-    gameOver(Board,Winner),
-    write(Winner), nl.
-
-
