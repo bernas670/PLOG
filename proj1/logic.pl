@@ -8,7 +8,7 @@ startGame(Player1, Player2) :-
     write(StartPiecesBoard).
 
 /*
-    gameLoop(StartPiecesBoard, Player1, Player2).
+    gameLoop(StartPiecesBoard, Player1, Player2). % loop that will occur until there is a winner
 
 gameLoop(Board, Player1, Player2) :-
     makeMove(Board, Player1, NewBoard, 1),
@@ -21,7 +21,12 @@ makeMove(_Board, 'C', _NewBoard, _PlayerPiece) :-
 
 makeMove(Board, 'P', NewBoard, PlayerPiece) :-
     valid_moves(Board, PlayerPiece, ListOfMoves),
-    write(ListOfMoves), nl.
+    write(ListOfMoves), nl,
+    ansi_format([bg(black), fg(red)], '                       Place ~w                       ', [Player]), nl,
+    pieceName(PlayerPiece, PieceName),
+    ansi_format([bg(black), fg(red)], '                       Place ~w                       ', [PieceName]), nl,
+    askCoords(Row,Column),
+
 
 valid_moves(Board, PlayerPiece, ListOfMoves)
 */
