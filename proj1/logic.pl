@@ -113,7 +113,9 @@ gameOver(Board,Winner):-
     ;   C1 =:= C2 ->
     ansi_format([bg(black), fg(red)], '                         ITS A DRAW :S                         ',[]), nl
     ;   ansi_format([bg(black), fg(red)], '                     PLAYER 2 WON :D                         ',[]), nl
-    ).
+    ),
+    % TODO: remove this, it's only here because of the singleton warning
+    write(Winner), nl.
 
 %   ------------------------------------
 %      FUNCTIONS FOR TESTING PURPOSES
@@ -143,6 +145,7 @@ testPos :-
 testeValue:-
     finalBoard(Board),
     printBoard(Board),
-    gameOver(Board,Winner).
+    gameOver(Board,Winner),
+    write(Winner), nl.
 
 
