@@ -64,5 +64,11 @@ getMatrixColumn([PositionsH|PositionsT], ColIndex, [RowH|RowT]) :-
     getListItem(PositionsH, ColIndex, RowH),
     getMatrixColumn(PositionsT, ColIndex, RowT).
 
+% get the max value of a list
+max_list([H|T], R):- max(T, H, R). 
+max([], R, R). 
+max([H|T], AUX, R):- H >  AUX, max(T, H, R). 
+max([H|T], AUX, R):- H =< AUX, max(T, AUX, R).
+
 
 
