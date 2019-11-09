@@ -6,11 +6,11 @@ axisOrientation('Vertical', 1).
 axialSymmetry(Board, Orientation, AxisIndex, Positions, NewBoard) :-
     axisOrientation(Orientation, ColIndex),
     getMatrixColumn(Board, ColIndex, Coords),
-    max_list(Coords, Max),
+    max_list(Coords, Max),  %implemented @utilities.pl
 
     ((Max >= AxisIndex) ->
     (
-        % do the thingy    
+        % chamar uma função calcSymetryCoords que recebe uma lista de coordinates e utiliza a função calcSymetryCoord para cada elemento da lista
     );
     (
         min_list(Coords, Min),
@@ -34,5 +34,9 @@ calcSymmetryCoord(Coord, Axis, 1, NewCoord) :-
 % When the axis index is smaller than the coord
 calcSymmetryCoord(Coord, Axis, -1, NewCoord) :- 
     NewCoord is Coord + (Coord - Axis - 1) * (-2) - 1.
+
+
+% Calculates new coords for a list of coords with the auxiliar func calcSymmetryCoord
+/*calcSymetryCoords(Coords, Axis,1,NewCoords):-*/
 
 
