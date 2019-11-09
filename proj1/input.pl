@@ -20,6 +20,10 @@ validateCoord(09, Coord, _String) :- Coord is 8.
 validateCoord(10, Coord, _String) :- Coord is 9.
 validateCoord(_Input, Coord, String) :- askCoord(Coord, String).
 
+askPoint(HAxis, VAxis) :-
+    askAxis(HAxis, 'Horizontal'),
+    askAxis(VAxis, 'Vertical').
+
 % TODO: implement a term that clears the input buffer
 askAxis(Axis, String) :-
     ansi_format([bg(black)], '    ~w Axis  ', [String]),
