@@ -45,7 +45,7 @@ manage_input(1):-
     askAxis(Axis, String),
     write(Axis),
     write(-),
-    write(String).
+    write(String),nl.
 
 
 manage_input(2):-

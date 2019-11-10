@@ -5,10 +5,11 @@ startGame(Player1, Player2) :-
     addCastles(InitialBoard, CastleBoard, Player1, Player2),
     addStartPieces(CastleBoard, StartPiecesBoard, Player1, Player2),
     % TODO: remove this, it's only here because of the singleton warning
-    write(StartPiecesBoard).
-
-/*
+    % write(StartPiecesBoard).
     gameLoop(StartPiecesBoard, Player1, Player2). % loop that will occur until there is a winner
+
+
+
 
 gameLoop(Board, Player1, Player2) :-
     makeMove(Board, Player1, NewBoard, 1),
@@ -20,23 +21,35 @@ makeMove(_Board, 'C', _NewBoard, _PlayerPiece) :-
     nl, ansi_format([bg(black), fg(red)], '                       Under construction :)                       ', []), nl.
 
 makeMove(Board, 'P', NewBoard, PlayerPiece) :-
-    valid_moves(Board, PlayerPiece, ListOfMoves),
-    write(ListOfMoves), nl,
-    ansi_format([bg(black), fg(red)], '                       Place ~w                       ', [Player]), nl,
+    % valid_moves(Board, PlayerPiece, ListOfMoves),
+    %  write(ListOfMoves), nl,
+    ansi_format([bg(black), fg(red)], '                       Player ~w                       ', [PlayerPiece]), nl,
     pieceName(PlayerPiece, PieceName),
     ansi_format([bg(black), fg(red)], '                       Place ~w                       ', [PieceName]), nl,
     askCoords(Row, Column),
-    getBlockPositions(Board, PlayerPiece, Row, Column, NewBoard, [], Positions), % not sure if newboard is needed
-    askAxis(Axis, String),
+    getMatrixItem(Board,Row,Column,Item),
+    ((PlayerPiece == Item)->
+        (
+            % if in the position selected by the player there is a piece of yours
+            
+        );
+        (
+            % opposite case
+        )
+    ).
+
+    % depois de pedir as coordenadas do ponto para fazer a simetria é preciso ver se existe no Board atual
+    % getBlockPositions(Board, PlayerPiece, Row, Column, NewBoard, [], Positions), % not sure if newboard is needed
+    % askSymmetry.
     % verificar que é possível efetuar a simetria, tendo atenção a tres parametros:
     % -> primeiro, que o eixo de simetria não se encontro "dentro" da ilha de blocos a fazer a transformação
     % -> em segundo, que ao fazer as simetrias nenhum bloco fique fora do tabuleiro
     % -> em terceiro, se os dois anteriores se se verificarem, os blocos após a simetria não podem ocupar celulas ja ocupadas
-    axialSymmetryPositions() ou pointSymmetryPositions() consoante o escolhido na interface do axis
-    updateBOard() usando novas coordenadas.
+    % axialSymmetryPositions() ou pointSymmetryPositions() consoante o escolhido na interface do axis
+    % updateBOard() usando novas coordenadas.
     
 
-
+/*
 valid_moves(Board, PlayerPiece, ListOfMoves)
 */
 
