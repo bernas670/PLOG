@@ -32,28 +32,32 @@ askSymmetry:-
 
 printSymmetryMenu:-
     ansi_format([bg(black)], '                 1) Axis Symmetry                        ', []), nl,
-    ansi_format([bg(black)], '                 2) Point Symmetry                      ', []), nl.
+    ansi_format([bg(black)], '                 2) Point Symmetry                       ', []), nl.
 
 
 askSymmetryOption:-
-    ansi_format([bg(black)], '   Waiting for option...                                    ', []), nl.
+    ansi_format([bg(black)], 'Waiting for option...                                    ', []), nl.
 
 
 manage_input(1):-
     ansi_format([bg(black)], '                  Axis Symmetry choosen!                  ', []), nl,
-    askAxis(Axis, String).
+    ansi_format([bg(black)], '                  Choose Axis                             ', []),nl,
+    askAxis(Axis, String),
+    write(Axis),
+    write(-),
+    write(String).
 
 
 manage_input(2):-
     ansi_format([bg(black)], '                  Point Symmetry choosen!                  ', []), nl,
     ansi_format([bg(black)], '                  Choose Horizontal axis!                  ', []), nl,
     askAxis(Axis,'Horizontal'),
-    ansi_format([bg(black)], '                  Choose Vertical axis!                  ', []), nl,
+    ansi_format([bg(black)], '                  Choose Vertical axis!                    ', []), nl,
     askAxis(Axis,'Vertical').
 
 
 manage_input(_Other):-
-    ansi_format([bg(black), fg(red)], '                       Invalid input!                       ', []), nl,
+    ansi_format([bg(black), fg(red)], '                     Invalid input!                      ', []), nl,
     askSymmetryOption,
     read(Answer),
     manage_input(Answer).
