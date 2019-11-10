@@ -49,11 +49,11 @@ manage_input(1):-
 
 
 manage_input(2):-
-    ansi_format([bg(black)], '                  Point Symmetry choosen!                  ', []), nl,
-    ansi_format([bg(black)], '                  Choose Horizontal axis!                  ', []), nl,
+    ansi_format([bg(black)], '                  Point Symmetry choosen!                ', []), nl,
+    ansi_format([bg(black)], '                  Choose Horizontal axis!                ', []), nl,
     askAxis(Axis,'Horizontal'),
-    ansi_format([bg(black)], '                  Choose Vertical axis!                    ', []), nl,
-    askAxis(Axis,'Vertical').
+    ansi_format([bg(black)], '                  Choose Vertical axis!                  ', []), nl,
+    askAxis(Axis2,'Vertical').
 
 
 manage_input(_Other):-
