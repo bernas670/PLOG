@@ -50,9 +50,11 @@ printMatrix([Line|Tail], LineIndex, AxisLetter) :-
 
 % Print the horizontal divider
 printDivider(AxisLetter) :-
-    nl,
-    ansi_format([bg(black)], '     ┼────┼────┼────┼────┼────┼────┼────┼────┼────┼────┼ ~c  ', [AxisLetter]),
-    nl.
+    AxisLetter < 74,
+    !,
+    nl, ansi_format([bg(black)], '     ┼────┼────┼────┼────┼────┼────┼────┼────┼────┼────┼ ~c  ', [AxisLetter]), nl.
+printDivider(_AxisLetter) :-
+    nl, ansi_format([bg(black)], '     ┼────┼────┼────┼────┼────┼────┼────┼────┼────┼────┼    ', []), nl.
 
 % Print a line
 printLine([]) :-
