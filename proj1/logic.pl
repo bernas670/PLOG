@@ -25,7 +25,16 @@ makeMove(Board, 'P', NewBoard, PlayerPiece) :-
     ansi_format([bg(black), fg(red)], '                       Place ~w                       ', [Player]), nl,
     pieceName(PlayerPiece, PieceName),
     ansi_format([bg(black), fg(red)], '                       Place ~w                       ', [PieceName]), nl,
-    askCoords(Row,Column),
+    askCoords(Row, Column),
+    getBlockPositions(Board, PlayerPiece, Row, Column, NewBoard, [], Positions), % not sure if newboard is needed
+    askAxis(Axis, String),
+    % verificar que é possível efetuar a simetria, tendo atenção a tres parametros:
+    % -> primeiro, que o eixo de simetria não se encontro "dentro" da ilha de blocos a fazer a transformação
+    % -> em segundo, que ao fazer as simetrias nenhum bloco fique fora do tabuleiro
+    % -> em terceiro, se os dois anteriores se se verificarem, os blocos após a simetria não podem ocupar celulas ja ocupadas
+    axialSymmetryPositions() ou pointSymmetryPositions() consoante o escolhido na interface do axis
+    updateBOard() usando novas coordenadas.
+    
 
 
 valid_moves(Board, PlayerPiece, ListOfMoves)
