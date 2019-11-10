@@ -21,8 +21,40 @@ validateCoord(10, Coord, _String) :- Coord is 9.
 validateCoord(_Input, Coord, String) :- askCoord(Coord, String).
 
 % TODO: implement a term that clears the input buffer
+askSymmetry:-
+    printSymmetryMenu,
+    askSymmetryOption,
+    read(Answer),
+    manage_input(Answer).
+
+printSymmetryMenu:-
+    ansi_format([bg(black)], '                 1) Axis Symmetry                        ', []), nl,
+    ansi_format([bg(black)], '                 2) Point Symmetry                      ', []), nl.
+
+askSymmetryOption:-
+    ansi_format([bg(black)], '   Waiting for option...                                    ', []), nl.
+
+manage_input(1):-
+    ansi_format([bg(black)], '                  Axis Symmetry choosen!                  ', []), nl,
+    askAxis(Axis, String).
+
+manage_input(2):-
+    ansi_format([bg(black)], '                  Point Symmetry choosen!                  ', []), nl,
+    ansi_format([bg(black)], '                  Choose Horizontal axis!                  ', []), nl,
+    askAxis(Axis,'Horizontal'),
+    ansi_format([bg(black)], '                  Choose Vertical axis!                  ', []), nl,
+    askAxis(Axis,'Vertical').
+
+
+manage_input(_Other):-
+    ansi_format([bg(black), fg(red)], '                       Invalid input!                       ', []), nl,
+    askSymmetryOption,
+    read(Answer),
+    manage_input(Answer).
+
+
+
 askAxis(Axis, String) :-
-    ansi_format([bg(black)], '    ~w Axis  ', [String]),
     get_char(Input),
     validateAxis(Input, Axis, String).
 
@@ -46,7 +78,8 @@ validateAxis('P', Axis, 'Vertical') :- Axis is 6.
 validateAxis('Q', Axis, 'Vertical') :- Axis is 7.
 validateAxis('R', Axis, 'Vertical') :- Axis is 8.
 
-validateAxis(_Input, Axis, String) :- askAxis(Axis, String).
+validateAxis(_Input, Axis, String) :- 
+    askAxis(Axis, String).
 
 
 /*
