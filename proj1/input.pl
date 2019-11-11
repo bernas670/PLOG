@@ -1,10 +1,6 @@
-askCoords(Row, Column) :-
-    askCoord(Row, 'Row'),
-    askCoord(Column, 'Column').
-
 askCoord(Coord, String) :-
-    % FIXME: spacing on the print
-    ansi_format([bg(black)], '    ~w  ', [String]),
+    % TODO: make this prompt always 60 chars long
+    ansi_format([bg(black)], '    ~w  ', [String]), nl,
     read(Input),
     validateCoord(Input, Coord, String).
 
@@ -20,94 +16,57 @@ validateCoord(09, Coord, _String) :- Coord is 8.
 validateCoord(10, Coord, _String) :- Coord is 9.
 validateCoord(_Input, Coord, String) :- askCoord(Coord, String).
 
-askPoint(HAxis, VAxis) :-
-    askAxis(HAxis, 'Horizontal'),
-    askAxis(VAxis, 'Vertical').
 
-% TODO: implement a term that clears the input buffer
-
-
-askSymmetry:-
-    printSymmetryMenu,
-    askSymmetryOption,
-    read(Answer),
-    manage_input(Answer).
-
-
-printSymmetryMenu:-
-    ansi_format([bg(black)], '                 1) Axis Symmetry                        ', []), nl,
-    ansi_format([bg(black)], '                 2) Point Symmetry                       ', []), nl.
-
-
-askSymmetryOption:-
-    ansi_format([bg(black)], 'Waiting for option...                                    ', []), nl.
-
-
-manage_input(1):-
-    ansi_format([bg(black)], '                  Axis Symmetry choosen!                  ', []), nl,
-    ansi_format([bg(black)], '                  Choose Axis                             ', []),nl,
-    askAxis(Axis, String),
-    write(Axis),
-    write(-),
-    write(String),nl.
-
-
-manage_input(2):-
-    ansi_format([bg(black)], '                  Point Symmetry choosen!                ', []), nl,
-    ansi_format([bg(black)], '                  Choose Horizontal axis!                ', []), nl,
-    askAxis(Axis,'Horizontal'),
-    ansi_format([bg(black)], '                  Choose Vertical axis!                  ', []), nl,
-    askAxis(Axis2,'Vertical').
-
-
-manage_input(_Other):-
-    ansi_format([bg(black), fg(red)], '                     Invalid input!                      ', []), nl,
-    askSymmetryOption,
-    read(Answer),
-    manage_input(Answer).
+askCoords(Row, Column) :-
+    askCoord(Row, 'Row'),
+    askCoord(Column, 'Column'),
+    !.
 
 
 askAxis(Axis, String) :-
-    get_char(Input),
+    % TODO: make this prompt always 60 chars long
+    ansi_format([bg(black)], '   ~w Axis:    ', [String]), nl,
+    read(Input),
     validateAxis(Input, Axis, String).
 
-validateAxis('A', Axis, 'Horizontal') :- Axis is 0.
-validateAxis('B', Axis, 'Horizontal') :- Axis is 1.
-validateAxis('C', Axis, 'Horizontal') :- Axis is 2.
-validateAxis('D', Axis, 'Horizontal') :- Axis is 3.
-validateAxis('E', Axis, 'Horizontal') :- Axis is 4.
-validateAxis('F', Axis, 'Horizontal') :- Axis is 5.
-validateAxis('G', Axis, 'Horizontal') :- Axis is 6.
-validateAxis('H', Axis, 'Horizontal') :- Axis is 7.
-validateAxis('I', Axis, 'Horizontal') :- Axis is 8.
-
-validateAxis('J', Axis, 'Vertical') :- Axis is 0.
-validateAxis('K', Axis, 'Vertical') :- Axis is 1.
-validateAxis('L', Axis, 'Vertical') :- Axis is 2.
-validateAxis('M', Axis, 'Vertical') :- Axis is 3.
-validateAxis('N', Axis, 'Vertical') :- Axis is 4.
-validateAxis('O', Axis, 'Vertical') :- Axis is 5.
-validateAxis('P', Axis, 'Vertical') :- Axis is 6.
-validateAxis('Q', Axis, 'Vertical') :- Axis is 7.
-validateAxis('R', Axis, 'Vertical') :- Axis is 8.
-
-validateAxis(_Input, Axis, String) :- 
-    askAxis(Axis, String).
+validateAxis('a', Axis, 'Horizontal') :- Axis is 0.
+validateAxis('b', Axis, 'Horizontal') :- Axis is 1.
+validateAxis('c', Axis, 'Horizontal') :- Axis is 2.
+validateAxis('d', Axis, 'Horizontal') :- Axis is 3.
+validateAxis('e', Axis, 'Horizontal') :- Axis is 4.
+validateAxis('f', Axis, 'Horizontal') :- Axis is 5.
+validateAxis('g', Axis, 'Horizontal') :- Axis is 6.
+validateAxis('h', Axis, 'Horizontal') :- Axis is 7.
+validateAxis('i', Axis, 'Horizontal') :- Axis is 8.
+validateAxis('j', Axis, 'Vertical') :- Axis is 8.
+validateAxis('k', Axis, 'Vertical') :- Axis is 7.
+validateAxis('l', Axis, 'Vertical') :- Axis is 6.
+validateAxis('m', Axis, 'Vertical') :- Axis is 5.
+validateAxis('n', Axis, 'Vertical') :- Axis is 4.
+validateAxis('o', Axis, 'Vertical') :- Axis is 3.
+validateAxis('p', Axis, 'Vertical') :- Axis is 2.
+validateAxis('q', Axis, 'Vertical') :- Axis is 1.
+validateAxis('r', Axis, 'Vertical') :- Axis is 0.
+validateAxis(_Input, Axis, String) :- askAxis(Axis, String).
 
 
-/*
-    readInteger(Integer) :-
-        readInput(Integer),
-        integer(Integer).
+askPoint(HAxis, VAxis) :-
+    ansi_format([bg(black)], '                     Point Coordinates                      ', []), nl,
+    askAxis(HAxis, 'Horizontal'),
+    askAxis(VAxis, 'Vertical'),
+    !.
 
-    readInput(Input) :-
-        get0(Char),
-        readRest(Char, String),
-        name(Input, String).
 
-    readRest(10, []).
-    readRest(13, []).
-    readRest(Char, [Char|Rest]) :-
-        get0(Char1),
-        readRest(Char1, Rest).
-*/
+askSymmetry(Symmetry) :-
+    ansi_format([bg(black)], '    Symmetry type :                                         ', []), nl,
+    ansi_format([bg(black)], '          1) Axial Horizontal                               ', []), nl,
+    ansi_format([bg(black)], '          2) Axial Vertical                                 ', []), nl,
+    ansi_format([bg(black)], '          3) Point                                          ', []), nl,
+    ansi_format([bg(black)], '                  Waiting for an option...                  ', []), nl,
+    read(Input),
+    validateSymmetry(Input, Symmetry).
+
+validateSymmetry(1, Symmetry) :- Symmetry is 1.
+validateSymmetry(2, Symmetry) :- Symmetry is 2.
+validateSymmetry(3, Symmetry) :- Symmetry is 3.
+validateSymmetry(_Input, Symmetry) :- askSymmetry(Symmetry).
