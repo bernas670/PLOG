@@ -1,6 +1,5 @@
 % TODO: make the board size dynamic
 
-
 % Initial state of the board
 initialBoard([ 
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -32,8 +31,8 @@ printBoard(Board) :-
     ansi_format([bg(black)], '                                                            ', []), nl,
     ansi_format([bg(black)], '       01   02   03   04   05   06   07   08   09   10      ', []), nl,
     ansi_format([bg(black)], '     ┼────┼────┼────┼────┼────┼────┼────┼────┼────┼────┼    ', []), nl,
-    printMatrix(Board, 1, 65),
-    ansi_format([bg(black)], '          R    Q    P    O    N    M    L    K    J         ', []), nl,
+    printMatrix(Board, 1, 97),
+    ansi_format([bg(black)], '          r    q    p    o    n    m    l    k    j         ', []), nl,
     ansi_format([bg(black)], '                                                            ', []), nl,
     nl.
 
@@ -42,7 +41,6 @@ printMatrix([], _, _).
 printMatrix([Line|Tail], LineIndex, AxisLetter) :-
     ansi_format([bg(black)], '  ~|~`0t~d~2+', [LineIndex]),
     printLine(Line),
-    % FIXME: J is printing on the right side of the board but it shouldn't
     printDivider(AxisLetter),
     NewLineIndex is LineIndex + 1,
     NewAxisLetter is AxisLetter + 1,
@@ -50,7 +48,7 @@ printMatrix([Line|Tail], LineIndex, AxisLetter) :-
 
 % Print the horizontal divider
 printDivider(AxisLetter) :-
-    AxisLetter < 74,
+    AxisLetter < 106,
     !,
     nl, ansi_format([bg(black)], '     ┼────┼────┼────┼────┼────┼────┼────┼────┼────┼────┼ ~c  ', [AxisLetter]), nl.
 printDivider(_AxisLetter) :-
@@ -69,12 +67,10 @@ printCell(Cell) :-
     pieceColor(Cell, Color),
     ansi_format([bg(Color)], '  ', []).
 
-updateBoard(Board, [], _Piece, NewBoard) :-
-    copyMatrix(Board, NewBoard).
+% Update the board by changing the cells on the given positions
+updateBoard(Board, [], _Piece, Board).
 updateBoard(Board, [HPos|TPos], Piece, NewBoard) :-
     getListItem(HPos, 0, Row),
     getListItem(HPos, 1, Column),
     setMatrixItem(Board, Row, Column, Piece, NewBoard1),
     updateBoard(NewBoard1, TPos, Piece, NewBoard).
-
-
