@@ -11,34 +11,36 @@ mainMenu :-
 % Print the main menu
 printMainMenu :- 
     ansi_format([bg(black)], '                                                            ', []), nl,
-    ansi_format([bg(black)], '                                                            ', []), nl,
-    ansi_format([bg(black)], '                                                            ', []), nl,
-    ansi_format([bg(black)], '                                                            ', []), nl,
-    ansi_format([bg(black)], '             ____ _        _          __     __             ', []), nl,
-    ansi_format([bg(black)], '            / ___| |_ _ __| |    _    \\ \\   / /             ', []), nl,
-    ansi_format([bg(black)], '           | |   | __|  __| |  _| |_   \\ \\ / /              ', []), nl,
-    ansi_format([bg(black)], '           | |___| |_| |  | | |_   _|   \\ V /               ', []), nl,
-    ansi_format([bg(black)], '            \\____|\\__|_|  |_|   |_|      \\_/                ', []), nl,
-    ansi_format([bg(black)], '                                                            ', []), nl,
-    ansi_format([bg(black)], '                                                            ', []), nl,
-    ansi_format([bg(black)], '                                                            ', []), nl,
-    ansi_format([bg(black)], '                 1) Player VS Player                        ', []), nl,
-    ansi_format([bg(black)], '                 2) Player VS Computer                      ', []), nl,
-    ansi_format([bg(black)], '                 3) Computer VS Computer                    ', []), nl,
-    ansi_format([bg(black)], '                                                            ', []), nl,
-    ansi_format([bg(black)], '                 0) Quit                                    ', []), nl,
-    ansi_format([bg(black)], '                                                            ', []), nl,
-    ansi_format([bg(black)], '                                                            ', []), nl,
-    ansi_format([bg(black)], '                         by : Bernardo Santos               ', []), nl,
-    ansi_format([bg(black)], '                               & Vítor Gonçalves            ', []), nl,
-    ansi_format([bg(black)], '                                                            ', []), nl,
-    ansi_format([bg(black)], '                                                            ', []), nl,
-    ansi_format([bg(black)], '                                                            ', []), nl,
+    ansi_format([bg(black)], '   ┼────────────────────────────────────────────────────┼   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   │         ____ _        _          __     __         │   ', []), nl,
+    ansi_format([bg(black)], '   │        / ___| |_ _ __| |    _    \\ \\   / /         │   ', []), nl,
+    ansi_format([bg(black)], '   │       | |   | __|  __| |  _| |_   \\ \\ / /          │   ', []), nl,
+    ansi_format([bg(black)], '   │       | |___| |_| |  | | |_   _|   \\ V /           │   ', []), nl,
+    ansi_format([bg(black)], '   │        \\____|\\__|_|  |_|   |_|      \\_/            │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   │             1) Player VS Player                    │   ', []), nl,
+    ansi_format([bg(black)], '   │             2) Player VS Computer                  │   ', []), nl,
+    ansi_format([bg(black)], '   │             3) Computer VS Player                  │   ', []), nl,
+    ansi_format([bg(black)], '   │             4) Computer VS Computer                │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   │             5) Rules                               │   ', []), nl,
+    ansi_format([bg(black)], '   │             0) Quit                                │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   │                     by : Bernardo Santos           │   ', []), nl,
+    ansi_format([bg(black)], '   │                           & Vítor Gonçalves        │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   ┼────────────────────────────────────────────────────┼   ', []), nl,
     ansi_format([bg(black)], '                                                            ', []), nl.
+    
 
-% 
+% Prompt when the game is waiting for an option
 askOption :-
-    ansi_format([bg(black)], '   Waiting for option...                                    ', []), nl.
+    ansi_format([bg(black)], '                   Waiting for option...                    ', []), nl.
 
 % If the user input is 1 start the game as player vs player
 manageInput(1) :-
@@ -54,12 +56,23 @@ manageInput(2) :-
     ansi_format([bg(black)], '                                                            ', []), nl,
     startGame('P', 'C').
 
-% If the user input is 3 start the game as computer vs computer
+% If the user input is 3 start the game as computer vs player
 manageInput(3) :-
+    ansi_format([bg(black)], '                                                            ', []), nl,
+    ansi_format([bg(black)], '                 Computer VS Player chosen!                 ', []), nl,
+    ansi_format([bg(black)], '                                                            ', []), nl,
+    startGame('C', 'P').
+
+% If the user input is 3 start the game as computer vs computer
+manageInput(4) :-
     ansi_format([bg(black)], '                                                            ', []), nl,
     ansi_format([bg(black)], '                Computer VS Computer chosen!                ', []), nl,
     ansi_format([bg(black)], '                                                            ', []), nl,
     startGame('C', 'C').
+
+% If the user input is 5 display the rules
+manageInput(5) :-
+    write('rules'), nl.
 
 % If the user input is 0 quit the game
 manageInput(0) :-
