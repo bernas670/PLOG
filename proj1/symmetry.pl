@@ -1,15 +1,12 @@
 axisOrientation('H', 0).
 axisOrientation('V', 1).
 
-% checks if a certain position, coords, is free at the atual board
 isEmpty(Board, Coords) :-
-    getListItem(Coords, 0, Row), % obtains row index at first element of coords
-    getListItem(Coords, 1, Column),  % obtains column index at second element of coords  
+    getListItem(Coords, 0, Row),    
+    getListItem(Coords, 1, Column),    
     getMatrixItem(Board, Row, Column, Piece),
     Piece == 0.
 
-
-% axial symmetries
 axialSymmetryPositions(_Board, [], _Orientation, _Axis, []).
 axialSymmetryPositions(Board, [HPos|TPos], Orientation, Axis, [HRes|TRes]) :-
     axisOrientation(Orientation, ColIndex),
@@ -20,7 +17,6 @@ axialSymmetryPositions(Board, [HPos|TPos], Orientation, Axis, [HRes|TRes]) :-
     isEmpty(Board, HRes),
     axialSymmetryPositions(Board, TPos, Orientation, Axis, TRes).
 
-% point symmetries 
 pointSymmetryPositions(_Board, [], _HAxis, _VAxis, []).
 pointSymmetryPositions(Board, [HPos|TPos], HAxis, VAxis, [HRes|TRes]) :-
     blockPointSymmetry(HPos, HAxis, VAxis, HRes),
@@ -30,6 +26,7 @@ pointSymmetryPositions(Board, [HPos|TPos], HAxis, VAxis, [HRes|TRes]) :-
     Col >= 0, Col =< 9,
     isEmpty(Board, HRes),
     pointSymmetryPositions(Board, TPos, HAxis, VAxis, TRes).
+
 
 % Calculate the symmetric coordinate to Coord in relation to Axis
 % When the axis index is greater or equal to the coord

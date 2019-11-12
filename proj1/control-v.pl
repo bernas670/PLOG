@@ -4,6 +4,7 @@
 :- include('utilities.pl').
 :- include('input.pl').
 :- include('symmetry.pl').
+:- include('bot.pl').
 
 % TODO: remove this include
 :- include('test.pl').

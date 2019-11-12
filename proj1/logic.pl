@@ -4,50 +4,98 @@ startGame(Player1, Player2) :-
     printBoard(InitialBoard),
     addCastles(InitialBoard, CastleBoard, Player1, Player2),
     addStartPieces(CastleBoard, StartPiecesBoard, Player1, Player2),
-    % TODO: remove this, it's only here because of the singleton warning
-    % write(StartPiecesBoard).
-    gameLoop(StartPiecesBoard, Player1, Player2). % loop that will occur until there is a winner
+    gameLoop(StartPiecesBoard, Player1, Player2).
 
-
-
-
+% The game loop 
 gameLoop(Board, Player1, Player2) :-
-    makeMove(Board, Player1, NewBoard, 1),
-    makeMove(NewBoard, Player2, NewBoard2, 2),
+    playerTurn(Board, Player1, 1, NewBoard1),
+    playerTurn(NewBoard1, Player2, 2, NewBoard2),
+    % TODO: check if the players have moves left
+    % if there are no moves left game_over, else keep playing
     gameLoop(NewBoard2, Player1, Player2).
 
-% TODO:
-makeMove(_Board, 'C', _NewBoard, _PlayerPiece) :-
-    nl, ansi_format([bg(black), fg(red)], '                       Under construction :)                       ', []), nl.
 
-makeMove(Board, 'P', NewBoard, PlayerPiece) :-
-    % valid_moves(Board, PlayerPiece, ListOfMoves),
-    %  write(ListOfMoves), nl,
-    ansi_format([bg(black), fg(red)], '                       Player ~w                       ', [PlayerPiece]), nl,
-    pieceName(PlayerPiece, PieceName),
-    ansi_format([bg(black), fg(red)], '                       Place ~w                       ', [PieceName]), nl,
+% playerTurn(Board, Player, Piece, NewBoard)
+playerTurn(Board, 'P', Piece, NewBoard) :-
+    % TODO: get valid moves
+    % if there are valid moves play, else pass turn
+    getChunk(Board, 'P', Piece, Positions),
+    askSymmetry(Symmetry),
+    makeSymmetry(Board, 'P', Symmetry, Positions, NewPositions),
+    updateBoard(Board, NewPositions, Piece, NewBoard),
+    printBoard(NewBoard).
+
+
+% getChunk(Board, Player, Piece, Positions)
+getChunk(Board, 'P', Piece, Positions) :-
+    ansi_format([bg(black)], '            PLAYER ~d : Choose one of your blocks            ', [Piece]), nl,
     askCoords(Row, Column),
-    getMatrixItem(Board,Row,Column,Item),
-    ((PlayerPiece == Item)->
-        (
-            % if in the position selected by the player there is a piece of yours
-            
-        );
-        (
-            % opposite case
-        )
+    (
+    getBlockPositions(Board, Row, Column, Piece, Positions)
+    % TODO: check if the chunk has any valid moves
+    );(
+    getChunk(Board, 'P', Piece, Positions)
     ).
 
-    % depois de pedir as coordenadas do ponto para fazer a simetria é preciso ver se existe no Board atual
-    % getBlockPositions(Board, PlayerPiece, Row, Column, NewBoard, [], Positions), % not sure if newboard is needed
-    % askSymmetry.
-    % verificar que é possível efetuar a simetria, tendo atenção a tres parametros:
-    % -> primeiro, que o eixo de simetria não se encontro "dentro" da ilha de blocos a fazer a transformação
-    % -> em segundo, que ao fazer as simetrias nenhum bloco fique fora do tabuleiro
-    % -> em terceiro, se os dois anteriores se se verificarem, os blocos após a simetria não podem ocupar celulas ja ocupadas
-    % axialSymmetryPositions() ou pointSymmetryPositions() consoante o escolhido na interface do axis
-    % updateBOard() usando novas coordenadas.
+% Player - 1 or 2 (it's actually the player piece)
+valid_moves(Board, Piece, ListOfMoves) :-
+    getAllChunks(Board, Piece, Chunks).
+
+    % get all of the chunks
+    % getAllChunks
+    % for each chunk, check all the possible moves
+
+getAllChunks(Board, Piece, Chunks) :-
+    getAllChunks(Board, 0, 0, Piece, Chunks).
+getAllChunks(_Board, 9, 9, _Piece, []).
+getAllChunks(Board, Row, Column, Piece, Chunks) :-
+    getMatrixItem(Board, Row, Column, Block),
+    Piece == Block,
+    !,
+    getBlockPositions(Board, Piece, Row, Column, NewBoard, [], Positions),
+    nextCell(Row, Column, NewRow, NewColumn),
+    getAllChunks(NewBoard, NewRow, NewColumn, Piece, NewChunks),
+    append([Positions], NewChunks, Chunks).
+getAllChunks(Board, Row, Column, Piece, Chunks) :-
+    nextCell(Row, Column, NewRow, NewColumn),
+    getAllChunks(Board, NewRow, NewColumn, Piece, Chunks).
+
+nextCell(OldRow, 9, Row, 0) :-
+    Row is OldRow + 1.
+nextCell(OldRow, OldColumn, OldRow, Column) :-
+    Column is OldColumn + 1.
+
+
+
+% TODO: do the loop to ask until a valid symmetry is entered
+% getSymmetry(Board, Player, Positions, NewPositions)
+
+% makeSymmetry(Board, Player, Symmetry, Positions, NewBoard)
+% Horizontal Axial Symmetry
+makeSymmetry(Board, 'P', 1, Positions, NewPositions) :-
+    % TODO: check if there are any valid moves with an horizontal axis
+    askAxis(Axis, 'Horizontal'),
+    axialSymmetryPositions(Board, Positions, 'H', Axis, NewPositions);
+    makeSymmetry(Board, 'P', 1, Positions, NewPositions).
+
+% Vertical Axial Symmetry
+makeSymmetry(Board, 'P', 2, Positions, NewPositions) :-
+    % TODO: check if there are any valid moves with an horizontal axis
+    askAxis(Axis, 'Vertical'),
+    axialSymmetryPositions(Board, Positions, 'V', Axis, NewPositions);
+    makeSymmetry(Board, 'P', 2, Positions, NewPositions).
     
+
+% Point Symmetry
+makeSymmetry(Board, 'P', 3, Positions, NewPositions) :-
+    % TODO: check if there are any valid moves with an horizontal axis    
+    askPoint(HAxis, VAxis),
+    pointSymmetryPositions(Board, Positions, HAxis, VAxis, NewPositions);
+    makeSymmetry(Board, 'P', 3, Positions, NewPositions).
+    
+
+% TODO: change where invalid move occurs
+invalidMove :- nl, write('invalid move'), nl.
 
 /*
 valid_moves(Board, PlayerPiece, ListOfMoves)
@@ -79,8 +127,7 @@ placePiece(Board, NewBoard, Piece, Player) :-
         RealRow is Row + 1,
         RealColumn is Column + 1,
         ansi_format([bg(black), fg(red)], '    PLAYER ~w placed a ~w on [row, col] : [~d, ~d]    ', [Player, PieceName, RealRow, RealColumn])
-    );
-    (
+    );(
         ansi_format([bg(black), fg(red)], '             This cell is occupied! Try again...            ', []), nl,
         printBoard(Board),
         placePiece(Board, NewBoard, Piece, Player)
@@ -92,6 +139,10 @@ isEmpty(Board, Row, Column) :-
     getMatrixItem(Board, Row, Column, Piece),
     Piece == 0.
 
+getBlockPositions(Board, Row, Column, Block, Positions) :-
+    getMatrixItem(Board, Row, Column, Piece),
+    Piece == Block,
+    getBlockPositions(Board, Block, Row, Column, _NewBoard, [], Positions).
 % Returns a list of positions (NewPositions) with the coordinates of the blocks
 % Positions must be an empty list
 getBlockPositions(Board, Block, Row, Column, NewBoard, Positions, NewPositions) :-
@@ -123,13 +174,8 @@ getBlockPositions(Board, Block, Row, Column, NewBoard, Positions, NewPositions) 
             copyList(Positions, NewPositions)
         )
     ).
-
 % If the Row or Column parameters are invalid return
-getBlockPositions(Board, _Block, _Row, _Column, NewBoard, Positions, NewPositions) :-
-    copyMatrix(Board, NewBoard),
-    copyList(Positions, NewPositions).
-
-
+getBlockPositions(Board, _Block, _Row, _Column, Board, Positions, Positions).
 
 value(Board,Player,Value):-
     countItemsMatrix(Board,Player,Value).
