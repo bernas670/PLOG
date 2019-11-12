@@ -36,6 +36,39 @@ printMainMenu :-
     ansi_format([bg(black)], '   │                                                    │   ', []), nl,
     ansi_format([bg(black)], '   ┼────────────────────────────────────────────────────┼   ', []), nl,
     ansi_format([bg(black)], '                                                            ', []), nl.
+
+printRulesMenu:-
+    ansi_format([bg(black)], '                                                            ', []), nl,
+    ansi_format([bg(black)], '   ┼────────────────────────────────────────────────────┼   ', []), nl,
+    ansi_format([bg(black)], '   │  ', []), 
+    ansi_format([bg(black), fg(red)], '                   R U L E S                  ', []),
+    ansi_format([bg(black)], '    │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   │ At the beginning, both players place 2 castle      │   ', []), nl,
+    ansi_format([bg(black)], '   │ pieces that will only serve as obstacles.          │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   │ Immediately after, each player places a piece      │   ', []), nl,
+    ansi_format([bg(black)], '   │ of their own in an empty place.                    │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   │ Until the end of the game, alternately each player │   ', []), nl,
+    ansi_format([bg(black)], '   │ must select a valid position of their own pieces   │   ', []), nl,
+    ansi_format([bg(black)], '   │ already on the board, and using the axes make      │   ', []), nl,
+    ansi_format([bg(black)], '   │ symmetries to place new pieces.                    │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   │ Symmetries can be vertical, horizontal and also    │   ', []), nl,
+    ansi_format([bg(black)], '   │ over points.                                       │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   │ The game is over when there are no more valid      │   ', []), nl,
+    ansi_format([bg(black)], '   │ moves for any player. At this point, the one that  │   ', []), nl,
+    ansi_format([bg(black)], '   │ has the most pieces on the board is the winner.    │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   │  ', []), 
+    ansi_format([bg(black), fg(cyan)], '                  Have fun :D                 ', []),
+    ansi_format([bg(black)], '    │   ', []), nl,
+    ansi_format([bg(black)], '   ┼────────────────────────────────────────────────────┼   ', []), nl,
+    ansi_format([bg(black)], '                                                            ', []), nl.
+
     
 
 % Prompt when the game is waiting for an option
@@ -72,8 +105,9 @@ manageInput(4) :-
 
 % If the user input is 5 display the rules
 manageInput(5) :-
-    write('rules'), nl.
-
+    printRulesMenu, nl,
+    mainMenu.
+   
 % If the user input is 0 quit the game
 manageInput(0) :-
     ansi_format([bg(black)], '                                                            ', []), nl,
