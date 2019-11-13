@@ -1,36 +1,51 @@
 % Start the game
-startGame(Player1, Player2) :-
+startGame(Player1, P1Level, Player2, P2Level) :-
     initialBoard(InitialBoard),
     printBoard(InitialBoard),
     addCastles(InitialBoard, Player1, Player2, CastleBoard),
     addStartPieces(CastleBoard, Player1, Player2, StartPiecesBoard),
-    gameLoop(StartPiecesBoard, Player1, Player2).
+    gameLoop(StartPiecesBoard, Player1, P1Level, Player2, P2Level).
 
 
 % The game loop 
-gameLoop(Board, Player1, Player2) :-
-    playerTurn(Board, Player1, 1, NewBoard1),
-    playerTurn(NewBoard1, Player2, 2, NewBoard2),
+gameLoop(Board, Player1, P1Level, Player2, P2Level) :-
+    playerTurn(Board, Player1, P1Level, 1, NewBoard1),
+    playerTurn(NewBoard1, Player2, P2Level, 2, NewBoard2),
     % TODO: check if the players have moves left
     % if there are no moves left game_over, else keep playing
-    gameLoop(NewBoard2, Player1, Player2).
+    gameLoop(NewBoard2, Player1, P1Level, Player2, P2Level).
+
+% FIXME: doesnt validate the move, only updates the board
+move(Board, Move, Piece, NewBoard) :-
+    updateBoard(Board, Move, Piece, NewBoard).
 
 
-% playerTurn(Board, Player, Piece, NewBoard)
-playerTurn(Board, 'P', Piece, NewBoard) :-
+% playerTurn(Board, Player, PlayerLevel, Piece, NewBoard)
+playerTurn(Board, 'P', _Level, Piece, NewBoard) :-
     % TODO: get valid moves
     % if there are valid moves play, else pass turn
     getChunk(Board, 'P', Piece, Positions),
     % TODO: check if the chunk has any valid moves 
     askSymmetry(Symmetry),
     makeSymmetry(Board, 'P', Symmetry, Positions, NewPositions),
-    updateBoard(Board, NewPositions, Piece, NewBoard),
+    move(Board, NewPositions, Piece, NewBoard),
     printBoard(NewBoard).
 
-playerTurn(Board, 'C', Piece, NewBoard) :-
+playerTurn(Board, 'C', Level, Piece, NewBoard) :-
+    choose_move(Board, Piece, Level, Move),
     % TODO:
-    updateBoard(Board, NewPositions, Piece, NewBoard),
+    move(Board, Move, Piece, NewBoard),
     printBoard(NewBoard).
+
+% choose_move(Board, Piece, Level, Move)
+choose_move(Board, Piece, 1, Move) :-
+    valid_moves(Board, Piece, ValidMoves),
+    random_member(Move, ValidMoves).
+
+% FIXME: implement for level 2 (greedy)
+choose_move(Board, Piece, 2, Move) :-
+    valid_moves(Board, Piece, ValidMoves),
+    random_member(Move, ValidMoves).
 
 
 % getChunk(Board, Player, Piece, Positions)
@@ -96,11 +111,6 @@ makeSymmetry(Board, 'P', 3, Positions, NewPositions) :-
     pointSymmetryPositions(Board, Positions, HAxis, VAxis, NewPositions);
     makeSymmetry(Board, 'P', 3, Positions, NewPositions).
 
-/*
-valid_moves(Board, PlayerPiece, ListOfMoves)
-*/
-
-
 addCastles(Board, Player1, Player2, NewBoard) :-
     placePiece(Board, Player1, 1, 3, NewBoard1),
     placePiece(NewBoard1, Player1, 1, 3, NewBoard2),
@@ -113,7 +123,6 @@ addStartPieces(Board, Player1, Player2, NewBoard) :-
 
 % Prompts the player to place a Piece on the board
 % placePiece(Board, Player, Piece, NewBoard)
-% FIXME: excessive board prints
 placePiece(Board, 'P', PlayerNumber, Piece, NewBoard) :-
     ansi_format([bg(black), fg(red)], '                         PLAYER ~d                         ', [PlayerNumber]), nl,
     pieceName(Piece, PieceName),
@@ -142,32 +151,12 @@ generateCoords(Board, Row, Column) :-
     generateCoords(Board, Row, Column).
 
 
-
-/*
-placePiece(Board, NewBoard, Piece, Player) :-
-    ansi_format([bg(black), fg(red)], '                         PLAYER ~w                         ', [Player]), nl,
-    pieceName(Piece, PieceName),
-    ansi_format([bg(black), fg(red)], '                       Place ~w                       ', [PieceName]), nl,    
-    askCoords(Row, Column),
-    ((
-        isEmpty(Board, Row, Column),
-        setMatrixItem(Board, Row, Column, Piece, NewBoard),
-        RealRow is Row + 1,
-        RealColumn is Column + 1,
-        ansi_format([bg(black), fg(red)], '    PLAYER ~w placed a ~w on [row, col] : [~d, ~d]    ', [Player, PieceName, RealRow, RealColumn])
-    );(
-        ansi_format([bg(black), fg(red)], '             This cell is occupied! Try again...            ', []), nl,
-        printBoard(Board),
-        placePiece(Board, NewBoard, Piece, Player)
-    )),
-    printBoard(NewBoard).
-*/
-
 % Is true if the cell is empty
 isEmpty(Board, Row, Column) :-
     getMatrixItem(Board, Row, Column, Piece),
     Piece == 0.
 
+% FIXME: refactor this code
 getBlockPositions(Board, Row, Column, Block, Positions) :-
     getMatrixItem(Board, Row, Column, Piece),
     Piece == Block,
@@ -206,8 +195,10 @@ getBlockPositions(Board, Block, Row, Column, NewBoard, Positions, NewPositions) 
 % If the Row or Column parameters are invalid return
 getBlockPositions(Board, _Block, _Row, _Column, Board, Positions, Positions).
 
+
 value(Board,Player,Value):-
     countItemsMatrix(Board,Player,Value).
+
 
 gameOver(Board,Winner):-
     value(Board,1,C1),
