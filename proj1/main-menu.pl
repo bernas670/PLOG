@@ -12,13 +12,15 @@ botMenu1(BotLevel) :-
     printBotMenu1,
     askOption,
     read(Input),
-    manageBotInput(Input, BotLevel).
+    manageBotInput(Input, BotLevel),
+    printBotInfo(BotLevel1).
 
 botMenu2(BotLevel) :-
     printBotMenu2,
     askOption,
     read(Input),
-    manageBotInput(Input, BotLevel).
+    manageBotInput(Input, BotLevel),
+    printBotInfo(BotLevel1).
 
 
 botMenu3(BotLevel1, BotLevel2) :-
@@ -215,6 +217,17 @@ manageBot(2,2) :-
     ansi_format([bg(black), fg(red)], '               Greedy level choosen for computer 1          ', []), nl,
     ansi_format([bg(black), fg(red)], '               Greedy level choosen for computer 2          ', []), nl,
     ansi_format([bg(black)], '                                                            ', []), nl.
+
+printBotInfo(1) :-
+    ansi_format([bg(black)], '                                                            ', []), nl,
+    ansi_format([bg(black), fg(red)], '                     Random Level choosen                   ', []), nl,
+    ansi_format([bg(black)], '                                                            ', []), nl.
+
+printBotInfo(2) :-
+    ansi_format([bg(black)], '                                                            ', []), nl,
+    ansi_format([bg(black), fg(red)], '                     Greedy Level choosen                   ', []), nl,
+    ansi_format([bg(black)], '                                                            ', []), nl.
+
 
 
 
