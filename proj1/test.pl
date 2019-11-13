@@ -118,7 +118,6 @@ testRead :-
 
 
 /*
-
 A failed try at refactoring getBlockPositions :(
 
 blockPos(Board, Block, Row, Column, Positions) :-
@@ -139,3 +138,33 @@ blockPos(Board, Block, Row, Column, Positions) :-
     Column2 is Column - 1,      % left
     (blockPos(NewBoard, Block, Row, Column2, Positions4); true)
 */
+
+
+testMove(Row, Column, Symmetry, Axis) :-
+    Move = Row-Column-Symmetry-Axis,
+    write(Move), nl,
+    testMove(Move).
+testMove(Row, Column, Symmetry, HAxis, VAxis) :-
+    Move = Row-Column-Symmetry-HAxis-VAxis,
+    write(Move), nl,
+    testMove(Move).
+
+testMove(Move) :-
+    Row - Column - Symmetry - HAxis - VAxis = Move,
+    ansi_format([bg(black)], 'row : ~d col : ~d symmetry : ~d HAxis : ~d VAxis : ~d', [Row, Column, Symmetry, HAxis, VAxis]), nl.    
+testMove(Move) :-
+    Row - Column - Symmetry - Axis = Move,
+    ansi_format([bg(black)], 'row : ~d col : ~d symmetry : ~d axis : ~d', [Row, Column, Symmetry, Axis]), nl.
+
+testMove(Board, Move, Piece, NewBoard) :-
+    Row-Column-Symmetry-HAxis-VAxis = Move,
+    getBlockPositions(Board, Row, Column, Piece, Chunk),
+    pointSymmetryPositions(Board, Chunk, HAxis, VAxis, NewChunk),
+    updateBoard(Board, NewChunk, Piece, NewBoard).
+testMove(Board, Move, Piece, NewBoard) :-
+    Row-Column-Symmetry-Axis = Move,
+    getBlockPositions(Board, Row, Column, Piece, Chunk),
+    axialSymmetryPositions(Board, Chunk, Symmetry, Axis, NewChunk),
+    updateBoard(Board, NewChunk, Piece, NewBoard).
+
+
