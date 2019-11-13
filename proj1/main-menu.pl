@@ -8,6 +8,33 @@ mainMenu :-
     read(Input),
     manageInput(Input).
 
+botMenu1(BotLevel) :-
+    printBotMenu1,
+    askOption,
+    read(Input),
+    manageBotInput(Input, BotLevel),
+    printBotInfo(BotLevel1).
+
+botMenu2(BotLevel) :-
+    printBotMenu2,
+    askOption,
+    read(Input),
+    manageBotInput(Input, BotLevel),
+    printBotInfo(BotLevel1).
+
+
+botMenu3(BotLevel1, BotLevel2) :-
+    printBotMenu2,
+    askOption,
+    read(Input1),
+    manageBotInput(Input1, BotLevel1),
+    printBotMenu1,
+    askOption,
+    read(Input2),
+    manageBotInput(Input2, BotLevel2),
+    manageBot(BotLevel1, BotLevel2).
+
+
 % Print the main menu
 printMainMenu :- 
     ansi_format([bg(black)], '                                                            ', []), nl,
@@ -69,6 +96,34 @@ printRulesMenu:-
     ansi_format([bg(black)], '   ┼────────────────────────────────────────────────────┼   ', []), nl,
     ansi_format([bg(black)], '                                                            ', []), nl.
 
+printBotMenu1 :-
+    ansi_format([bg(black)], '                                                            ', []), nl,
+    ansi_format([bg(black)], '   ┼────────────────────────────────────────────────────┼   ', []), nl,
+    ansi_format([bg(black)], '   │', []),
+    ansi_format([bg(black),fg(cyan)], '                 Choose computer level   ', []),
+    ansi_format([bg(black)], '           │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   │                     1) Random                      │   ', []), nl,
+    ansi_format([bg(black)], '   │                     2) Greedy                      │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl, 
+    ansi_format([bg(black)], '   ┼────────────────────────────────────────────────────┼   ', []), nl,
+    ansi_format([bg(black)], '                                                            ', []), nl.
+
+printBotMenu2 :-
+    ansi_format([bg(black)], '                                                            ', []), nl,
+    ansi_format([bg(black)], '   ┼────────────────────────────────────────────────────┼   ', []), nl,
+    ansi_format([bg(black)], '   │', []),
+    ansi_format([bg(black),fg(red)], '                 Choose computer level   ', []),
+    ansi_format([bg(black)], '           │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl,
+    ansi_format([bg(black)], '   │                     1) Random                      │   ', []), nl,
+    ansi_format([bg(black)], '   │                     2) Greedy                      │   ', []), nl,
+    ansi_format([bg(black)], '   │                                                    │   ', []), nl, 
+    ansi_format([bg(black)], '   ┼────────────────────────────────────────────────────┼   ', []), nl,
+    ansi_format([bg(black)], '                                                            ', []), nl.
+
+
+
     
 
 % Prompt when the game is waiting for an option
@@ -87,6 +142,8 @@ manageInput(2) :-
     ansi_format([bg(black)], '                                                            ', []), nl,
     ansi_format([bg(black)], '                 Player VS Computer chosen!                 ', []), nl,
     ansi_format([bg(black)], '                                                            ', []), nl,
+    botMenu1(BotLevel),
+    write(BotLevel),
     startGame('P', 'C').
 
 % If the user input is 3 start the game as computer vs player
@@ -94,6 +151,8 @@ manageInput(3) :-
     ansi_format([bg(black)], '                                                            ', []), nl,
     ansi_format([bg(black)], '                 Computer VS Player chosen!                 ', []), nl,
     ansi_format([bg(black)], '                                                            ', []), nl,
+    botMenu2(BotLevel),
+    write(BotLevel),
     startGame('C', 'P').
 
 % If the user input is 3 start the game as computer vs computer
@@ -101,7 +160,10 @@ manageInput(4) :-
     ansi_format([bg(black)], '                                                            ', []), nl,
     ansi_format([bg(black)], '                Computer VS Computer chosen!                ', []), nl,
     ansi_format([bg(black)], '                                                            ', []), nl,
-    startGame('C', 'C').
+    botMenu3(BotLevel1, BotLevel2),
+    write(BotLevel1),
+    write('   '), write(BotLevel2).
+    %startGame('C', 'C').
 
 % If the user input is 5 display the rules
 manageInput(5) :-
@@ -122,3 +184,53 @@ manageInput(_Other) :-
     askOption,
     read(Input),
     manageInput(Input).
+
+manageBotInput(1, Bot) :- Bot is 1.
+
+manageBotInput(2, Bot) :- Bot is 2.
+
+manageBotInput(_Other, BotLevel) :-
+    askOption,
+    read(Input),
+    manageBotInput(Input, BotLevel).
+
+manageBot(1,2) :-
+    ansi_format([bg(black)], '                                                            ', []), nl,
+    ansi_format([bg(black), fg(red)], '               Random level choosen for computer 1          ', []), nl,
+    ansi_format([bg(black), fg(red)], '               Greedy level choosen for computer 2          ', []), nl,
+    ansi_format([bg(black)], '                                                            ', []), nl.
+
+manageBot(2,1) :-
+    ansi_format([bg(black)], '                                                            ', []), nl,
+    ansi_format([bg(black), fg(red)], '               Greedy level choosen for computer 1          ', []), nl,
+    ansi_format([bg(black), fg(red)], '               Random level choosen for computer 2          ', []), nl,
+    ansi_format([bg(black)], '                                                            ', []), nl.
+
+manageBot(1,1) :-
+    ansi_format([bg(black)], '                                                            ', []), nl,
+    ansi_format([bg(black), fg(red)], '               Random level choosen for computer 1          ', []), nl,
+    ansi_format([bg(black), fg(red)], '               Random level choosen for computer 2          ', []), nl,
+    ansi_format([bg(black)], '                                                            ', []), nl.
+
+manageBot(2,2) :-
+    ansi_format([bg(black)], '                                                            ', []), nl,
+    ansi_format([bg(black), fg(red)], '               Greedy level choosen for computer 1          ', []), nl,
+    ansi_format([bg(black), fg(red)], '               Greedy level choosen for computer 2          ', []), nl,
+    ansi_format([bg(black)], '                                                            ', []), nl.
+
+printBotInfo(1) :-
+    ansi_format([bg(black)], '                                                            ', []), nl,
+    ansi_format([bg(black), fg(red)], '                     Random Level choosen                   ', []), nl,
+    ansi_format([bg(black)], '                                                            ', []), nl.
+
+printBotInfo(2) :-
+    ansi_format([bg(black)], '                                                            ', []), nl,
+    ansi_format([bg(black), fg(red)], '                     Greedy Level choosen                   ', []), nl,
+    ansi_format([bg(black)], '                                                            ', []), nl.
+
+
+
+
+    
+
+    
