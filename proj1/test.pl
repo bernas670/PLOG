@@ -96,6 +96,21 @@ testBlockPos :-
     getBlockPositions(Board, 1, 0, 0, Positions),
     nl, write(Positions), nl.
 
+testGenerateCoords :-
+    testBoard2(Board),
+    printBoard(Board),
+    generateCoords(Board, Row, Col),
+    write('row : '), write(Row), write(' col : '), write(Col), nl,
+    setMatrixItem(Board, Row, Col, 3, NewBoard),
+    printBoard(NewBoard).
+
+testCastles :-
+    initialBoard(Board),
+    addCastles(Board, 'P', 'P', NewBoard),
+    printBoard(NewBoard).
+
+testStartGame :-
+    startGame('P', 'P').
 
 testRead :-
     read(Input),
