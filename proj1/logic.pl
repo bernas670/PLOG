@@ -7,7 +7,12 @@ startGame(Player1, P1Level, Player2, P2Level) :-
     gameLoop(StartPiecesBoard, Player1, P1Level, Player2, P2Level).
 
 
-% The game loop 
+% The game loop
+gameLoop(Board, Player1, _P1Level, Player2, _P2Level) :-
+    isGameOver(Board),
+    !,
+    game_over(Board, Winner),
+    write(Winner).
 gameLoop(Board, Player1, P1Level, Player2, P2Level) :-
     playerTurn(Board, Player1, P1Level, 1, NewBoard1),
     playerTurn(NewBoard1, Player2, P2Level, 2, NewBoard2),
@@ -15,101 +20,93 @@ gameLoop(Board, Player1, P1Level, Player2, P2Level) :-
     % if there are no moves left game_over, else keep playing
     gameLoop(NewBoard2, Player1, P1Level, Player2, P2Level).
 
-% FIXME: doesnt validate the move, only updates the board
-move(Board, Move, Piece, NewBoard) :-
-    updateBoard(Board, Move, Piece, NewBoard).
+isGameOver(Board) :-
+    \+valid_moves(Board, 1, _),
+    \+valid_moves(Board, 2, _).
 
 
 % playerTurn(Board, Player, PlayerLevel, Piece, NewBoard)
 playerTurn(Board, 'P', _Level, Piece, NewBoard) :-
-    % TODO: get valid moves
-    % if there are valid moves play, else pass turn
-    getChunk(Board, 'P', Piece, Positions),
-    % TODO: check if the chunk has any valid moves 
-    askSymmetry(Symmetry),
-    makeSymmetry(Board, 'P', Symmetry, Positions, NewPositions),
-    move(Board, NewPositions, Piece, NewBoard),
+    valid_moves(Board, Piece, _ValidMoves),
+    getBlock(Board, Piece, Row, Column),
+    askSymmetry(Symmetry, Axes),
+    Move = Row-Column-Symmetry-Axes,
+    move(Board, Move, Piece, NewBoard),
+    printMove(Move, 'P', Piece),
     printBoard(NewBoard).
-
 playerTurn(Board, 'C', Level, Piece, NewBoard) :-
     choose_move(Board, Piece, Level, Move),
-    % TODO:
     move(Board, Move, Piece, NewBoard),
+    printMove(Move, 'C', Piece),
     printBoard(NewBoard).
+playerTurn(Board, Player, _Level, Piece, Board) :-
+    ansi_format([bg(red), fg(white)], '                 ~w ~d Has no moves left                      ', [Player, Piece]), nl.
+
+printMove(Move, Player, PlayerNumber) :-
+    Row-Column-Symmetry-Axes = Move,
+    ansi_format([bg(red), fg(white)], '                 ~w ~d  SYMMETRY : ~d                      ', [Player, PlayerNumber, Symmetry]), nl.
+
 
 % choose_move(Board, Piece, Level, Move)
 choose_move(Board, Piece, 1, Move) :-
     valid_moves(Board, Piece, ValidMoves),
     random_member(Move, ValidMoves).
 
-% FIXME: implement for level 2 (greedy)
 choose_move(Board, Piece, 2, Move) :-
     valid_moves(Board, Piece, ValidMoves),
-    random_member(Move, ValidMoves).
+    getBestMove(Board, Piece, ValidMoves, Move).
 
-
+getBestMove(_Board, _Piece, [BestMove], BestMove) :-
+    !.
+getBestMove(Board, Piece, [HMove|TMove], HMove) :-
+    HRow-HColumn-_Symmetry-_Axes = HMove,
+    getBlockPositions(Board, HRow, HColumn, Piece, HPos),
+    length(HPos, HLength),
+    getBestMove(Board, Piece, TMove, BestMove),
+    BRow-BColumn-_Symmetry-_Axes = BestMove,
+    getBlockPositions(Board, BRow, BColumn, Piece, BPos),
+    length(BPos, BLength),
+    HLength >= BLength,
+    !.
+getBestMove(Board, Piece, [_HMove|TMove], BestMove) :-
+    getBestMove(Board, Piece, TMove, BestMove),
+    !.
+    
 % getChunk(Board, Player, Piece, Positions)
-getChunk(Board, 'P', Piece, Positions) :-
+getBlock(Board, Piece, Row, Column) :-
     ansi_format([bg(black)], '            PLAYER ~d : Choose one of your blocks            ', [Piece]), nl,
     askCoords(Row, Column),
-    getBlockPositions(Board, Row, Column, Piece, Positions).
-getChunk(Board, 'P', Piece, Positions) :-
-    getChunk(Board, 'P', Piece, Positions).
-
-
-getAllChunks(Board, Piece, Chunks) :-
-    getAllChunks(Board, 0, 0, Piece, Chunks).
-getAllChunks(_Board, 9, 9, _Piece, []).
-getAllChunks(Board, Row, Column, Piece, Chunks) :-
     getMatrixItem(Board, Row, Column, Block),
-    Piece == Block,
-    !,
-    getBlockPositions(Board, Piece, Row, Column, NewBoard, [], Positions),
-    nextCell(Row, Column, NewRow, NewColumn),
-    getAllChunks(NewBoard, NewRow, NewColumn, Piece, NewChunks),
-    append([Positions], NewChunks, Chunks).
-getAllChunks(Board, Row, Column, Piece, Chunks) :-
-    nextCell(Row, Column, NewRow, NewColumn),
-    getAllChunks(Board, NewRow, NewColumn, Piece, Chunks).
+    Piece == Block.
+getBlock(Board, Piece, Row, Column) :-
+    % TODO: error message
+    getBlock(Board, Piece, Row, Column).
 
-nextCell(OldRow, 9, Row, 0) :-
-    Row is OldRow + 1.
-nextCell(OldRow, OldColumn, OldRow, Column) :-
-    Column is OldColumn + 1.
 
-% Player - 1 or 2 (it's actually the player piece)
 valid_moves(Board, Piece, ListOfMoves) :-
-    getAllChunks(Board, Piece, Chunks).
-    % get all of the chunks
-    % getAllChunks
-    % for each chunk, check all the possible moves
+    findall(Move, validMove(Board, Piece, Symmetry, Row, Column, Axes, _, Move), ListOfMoves),
+    length(ListOfMoves, Length),
+    Length > 0.
+
+
+validMove(Board, Piece, Symmetry, Row, Column, Axes, NewPositions, ValidMove) :-
+    between(0, 9, Row),
+    between(0, 9, Column),
+    between(0, 2, Symmetry),
+    getBlockPositions(Board, Row, Column, Piece, Positions),
+    symmetry(Board, Positions, Symmetry, Axes, NewPositions),
+    ValidMove = Row-Column-Symmetry-Axes.    
+
+
+
+move(Board, Move, Piece, NewBoard) :-
+    Row-Column-Symmetry-Axes = Move,
+    validMove(Board, Piece, Symmetry, Row, Column, Axes, Pos, _),
+    updateBoard(Board, Pos, Piece, NewBoard).
 
 
 % TODO: do the loop to ask until a valid symmetry is entered
 % getSymmetry(Board, Player, Positions, NewPositions)
-
-% makeSymmetry(Board, Player, Symmetry, Positions, NewBoard)
-% Horizontal Axial Symmetry
-makeSymmetry(Board, 'P', 1, Positions, NewPositions) :-
-    % TODO: check if there are any valid moves with an horizontal axis
-    askAxis(Axis, 'Horizontal'),
-    axialSymmetryPositions(Board, Positions, 'H', Axis, NewPositions);
-    makeSymmetry(Board, 'P', 1, Positions, NewPositions).
-
-% Vertical Axial Symmetry
-makeSymmetry(Board, 'P', 2, Positions, NewPositions) :-
-    % TODO: check if there are any valid moves with an horizontal axis
-    askAxis(Axis, 'Vertical'),
-    axialSymmetryPositions(Board, Positions, 'V', Axis, NewPositions);
-    makeSymmetry(Board, 'P', 2, Positions, NewPositions).
-    
-
-% Point Symmetry
-makeSymmetry(Board, 'P', 3, Positions, NewPositions) :-
-    % TODO: check if there are any valid moves with an horizontal axis    
-    askPoint(HAxis, VAxis),
-    pointSymmetryPositions(Board, Positions, HAxis, VAxis, NewPositions);
-    makeSymmetry(Board, 'P', 3, Positions, NewPositions).
 
 addCastles(Board, Player1, Player2, NewBoard) :-
     placePiece(Board, Player1, 1, 3, NewBoard1),
@@ -130,6 +127,8 @@ placePiece(Board, 'P', PlayerNumber, Piece, NewBoard) :-
     askCoords(Row, Column),
     isEmpty(Board, Row, Column),
     setMatrixItem(Board, Row, Column, Piece, NewBoard),
+    RealRow is Row + 1, RealColumn is Column + 1,
+    ansi_format([bg(black), fg(red)], '          PLAYER ~d : Placed a ~w [~d, ~d]         ', [PlayerNumber, PieceName, RealRow, RealColumn]), nl,
     printBoard(NewBoard).
 placePiece(Board, 'P', PlayerNumber, Piece, NewBoard) :-
     ansi_format([bg(black), fg(red)], '             This cell is occupied! Try again...            ', []), nl,
@@ -140,7 +139,8 @@ placePiece(Board, 'C', PlayerNumber, Piece, NewBoard) :-
     pieceName(Piece, PieceName),
     generateCoords(Board, Row, Column),
     setMatrixItem(Board, Row, Column, Piece, NewBoard),
-    ansi_format([bg(black), fg(red)], '          COMPUTER ~d : Placed a ~w         ', [PlayerNumber, PieceName]), nl,
+    RealRow is Row + 1, RealColumn is Column + 1,
+    ansi_format([bg(black), fg(red)], '          COMPUTER ~d : Placed a ~w [~d, ~d]         ', [PlayerNumber, PieceName, RealRow, RealColumn]), nl,
     printBoard(NewBoard).
 
 generateCoords(Board, Row, Column) :-
@@ -155,6 +155,7 @@ generateCoords(Board, Row, Column) :-
 isEmpty(Board, Row, Column) :-
     getMatrixItem(Board, Row, Column, Piece),
     Piece == 0.
+
 
 % FIXME: refactor this code
 getBlockPositions(Board, Row, Column, Block, Positions) :-
@@ -195,12 +196,7 @@ getBlockPositions(Board, Block, Row, Column, NewBoard, Positions, NewPositions) 
 % If the Row or Column parameters are invalid return
 getBlockPositions(Board, _Block, _Row, _Column, Board, Positions, Positions).
 
-
-value(Board,Player,Value):-
-    countItemsMatrix(Board,Player,Value).
-
-
-gameOver(Board,Winner):-
+game_over(Board,Winner):-
     value(Board,1,C1),
     value(Board,2,C2),
     (   C1 > C2 ->

@@ -57,16 +57,24 @@ askPoint(HAxis, VAxis) :-
     !.
 
 
-askSymmetry(Symmetry) :-
+askSymmetry(Symmetry, Axis) :-
     ansi_format([bg(black)], '    Symmetry type :                                         ', []), nl,
     ansi_format([bg(black)], '          1) Axial Horizontal                               ', []), nl,
     ansi_format([bg(black)], '          2) Axial Vertical                                 ', []), nl,
     ansi_format([bg(black)], '          3) Point                                          ', []), nl,
     ansi_format([bg(black)], '                  Waiting for an option...                  ', []), nl,
     read(Input),
-    validateSymmetry(Input, Symmetry).
+    validateSymmetry(Input, Symmetry, Axis).
 
-validateSymmetry(1, Symmetry) :- Symmetry is 1.
-validateSymmetry(2, Symmetry) :- Symmetry is 2.
-validateSymmetry(3, Symmetry) :- Symmetry is 3.
-validateSymmetry(_Input, Symmetry) :- askSymmetry(Symmetry).
+validateSymmetry(1, Symmetry, Axis) :-
+    Symmetry is 0,
+    askAxis(Axis, 'Horizontal').
+validateSymmetry(2, Symmetry, Axis) :- 
+    Symmetry is 1,
+    askAxis(Axis, 'Vertical').
+validateSymmetry(3, Symmetry, Axis) :- 
+    Symmetry is 2,
+    askPoint(HAxis, VAxis),
+    Axis = HAxis-VAxis.
+validateSymmetry(_Input, Symmetry, Axis) :-
+    askSymmetry(Symmetry, Axis).

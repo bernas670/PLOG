@@ -1,30 +1,40 @@
-axisOrientation('H', 0).
-axisOrientation('V', 1).
-
 isEmpty(Board, Coords) :-
     getListItem(Coords, 0, Row),    
     getListItem(Coords, 1, Column),    
     getMatrixItem(Board, Row, Column, Piece),
     Piece == 0.
 
+symmetry(Board, Pos, Symmetry, Axes, NewPos) :-
+    between(0, 1, Symmetry),
+    between(0, 8, Axes),    
+    axialSymmetryPositions(Board, Pos, Symmetry, Axes, NewPos).
+symmetry(Board, Pos, 2, Axes, NewPos) :-
+    HAxis-VAxis = Axes,
+    between(0, 8, HAxis),
+    between(0, 8, VAxis),
+    pointSymmetryPositions(Board, Pos, HAxis, VAxis, NewPos).
+
+    
+
+    
+
 axialSymmetryPositions(_Board, [], _Orientation, _Axis, []).
 axialSymmetryPositions(Board, [HPos|TPos], Orientation, Axis, [HRes|TRes]) :-
-    axisOrientation(Orientation, ColIndex),
-    getListItem(HPos, ColIndex, Coord),
+    getListItem(HPos, Orientation, Coord),  
     blockAxialSymmetry(Coord, Axis, NewCoord),
-    NewCoord >= 0, NewCoord =< 9,
-    setListItem(HPos, ColIndex, NewCoord, HRes),
-    isEmpty(Board, HRes),
+    between(0, 9, NewCoord), !,
+    setListItem(HPos, Orientation, NewCoord, HRes), !,
+    isEmpty(Board, HRes), !,
     axialSymmetryPositions(Board, TPos, Orientation, Axis, TRes).
 
 pointSymmetryPositions(_Board, [], _HAxis, _VAxis, []).
 pointSymmetryPositions(Board, [HPos|TPos], HAxis, VAxis, [HRes|TRes]) :-
     blockPointSymmetry(HPos, HAxis, VAxis, HRes),
     getListItem(HRes, 0, Row),
-    Row >= 0, Row =< 9,
+    between(0, 9, Row), !,
     getListItem(HRes, 1, Col),
-    Col >= 0, Col =< 9,
-    isEmpty(Board, HRes),
+    between(0, 9, Col), !,
+    isEmpty(Board, HRes), !,
     pointSymmetryPositions(Board, TPos, HAxis, VAxis, TRes).
 
 

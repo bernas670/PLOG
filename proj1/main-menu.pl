@@ -13,14 +13,14 @@ botMenu1(BotLevel) :-
     askOption,
     read(Input),
     manageBotInput(Input, BotLevel),
-    printBotInfo(BotLevel1).
+    printBotInfo(BotLevel).
 
 botMenu2(BotLevel) :-
     printBotMenu2,
     askOption,
     read(Input),
     manageBotInput(Input, BotLevel),
-    printBotInfo(BotLevel1).
+    printBotInfo(BotLevel).
 
 
 botMenu3(BotLevel1, BotLevel2) :-
@@ -135,7 +135,7 @@ manageInput(1) :-
     ansi_format([bg(black)], '                                                            ', []), nl,
     ansi_format([bg(black)], '                  Player VS Player chosen!                  ', []), nl,
     ansi_format([bg(black)], '                                                            ', []), nl,
-    startGame('P', 'P').
+    startGame('P', _, 'P', _).
 
 % If the user input is 2 start the game as player vs computer
 manageInput(2) :-
@@ -144,7 +144,7 @@ manageInput(2) :-
     ansi_format([bg(black)], '                                                            ', []), nl,
     botMenu1(BotLevel),
     write(BotLevel),
-    startGame('P', 'C').
+    startGame('P', _, 'C', BotLevel).
 
 % If the user input is 3 start the game as computer vs player
 manageInput(3) :-
@@ -153,7 +153,7 @@ manageInput(3) :-
     ansi_format([bg(black)], '                                                            ', []), nl,
     botMenu2(BotLevel),
     write(BotLevel),
-    startGame('C', 'P').
+    startGame('C', BotLevel, 'P', _).
 
 % If the user input is 3 start the game as computer vs computer
 manageInput(4) :-
@@ -162,12 +162,12 @@ manageInput(4) :-
     ansi_format([bg(black)], '                                                            ', []), nl,
     botMenu3(BotLevel1, BotLevel2),
     write(BotLevel1),
-    write('   '), write(BotLevel2).
-    %startGame('C', 'C').
+    write('   '), write(BotLevel2),
+    startGame('C', BotLevel1, 'C', BotLevel2).
 
 % If the user input is 5 display the rules
 manageInput(5) :-
-    printRulesMenu, nl,
+    printRulesMenu,
     mainMenu.
    
 % If the user input is 0 quit the game

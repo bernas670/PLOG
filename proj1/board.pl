@@ -34,7 +34,13 @@ printBoard(Board) :-
     printMatrix(Board, 1, 97),
     ansi_format([bg(black)], '          r    q    p    o    n    m    l    k    j         ', []), nl,
     ansi_format([bg(black)], '                                                            ', []), nl,
+    value(Board, 1, P1), value(Board, 2, P2),
+    ansi_format([bg(black)], '     Scores         1 : ~d           2 : ~d                 ', [P1, P2]), nl,
+    ansi_format([bg(black)], '                                                            ', []), nl,
     nl.
+
+value(Board,Player,Value):-
+    countItemsMatrix(Board,Player,Value).
 
 % Print the contents of the matrix
 printMatrix([], _, _).

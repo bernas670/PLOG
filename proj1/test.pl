@@ -33,14 +33,35 @@ testBoard3([
     [1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
     [1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
     [1, 1, 1, 1, 1, 0, 0, 0, 0, 0]]).
-
+testBoard4([
+    [0, 0, 1, 0, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
+    [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]).
+testBoard5([ 
+    [0, 0, 0, 0, 0, 0, 0, 1, 1, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
+    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 1, 1, 0, 0, 0, 0, 0],
+    [0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+    [0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]).
 testAxialSymmetry :-
     testBoard1(Board),
     printBoard(Board),
     getBlockPositions(Board, 1, 3, 2, NewBoard, [], Pos),
     printBoard(NewBoard),
     write('old pos : '), write(Pos), nl,
-    axialSymmetryPositions(Board, Pos, 'H', 2, NewPos),
+    axialSymmetryPositions(Board, Pos, 0, 2, NewPos),
     write('new pos : '), write(NewPos), nl.
 
 testPos :- 
@@ -116,7 +137,17 @@ testRead :-
     read(Input),
     write(Input).
 
+testValidMoves :-
+    testBoard4(Board),
+    printBoard(Board),
+    valid_moves(Board, 1, ListOfMoves),
+    write(ListOfMoves), nl.
 
+testBestMove :-
+    testBoard4(Board),
+    printBoard(Board),
+    choose_move(Board, 1, 2, Move),
+    write(Move), nl.
 /*
 A failed try at refactoring getBlockPositions :(
 
@@ -139,32 +170,77 @@ blockPos(Board, Block, Row, Column, Positions) :-
     (blockPos(NewBoard, Block, Row, Column2, Positions4); true)
 */
 
+/*
+getAllChunks(Board, Piece, Chunks) :-
+    getAllChunks(Board, 0, 0, Piece, Chunks).
+getAllChunks(_Board, 9, 9, _Piece, []).
+getAllChunks(Board, Row, Column, Piece, Chunks) :-
+    getMatrixItem(Board, Row, Column, Block),
+    Piece == Block,
+    !,
+    getBlockPositions(Board, Piece, Row, Column, NewBoard, [], Positions),
+    nextCell(Row, Column, NewRow, NewColumn),
+    getAllChunks(NewBoard, NewRow, NewColumn, Piece, NewChunks),
+    append([Positions], NewChunks, Chunks).
+getAllChunks(Board, Row, Column, Piece, Chunks) :-
+    nextCell(Row, Column, NewRow, NewColumn),
+    getAllChunks(Board, NewRow, NewColumn, Piece, Chunks).
 
-testMove(Row, Column, Symmetry, Axis) :-
-    Move = Row-Column-Symmetry-Axis,
-    write(Move), nl,
-    testMove(Move).
-testMove(Row, Column, Symmetry, HAxis, VAxis) :-
-    Move = Row-Column-Symmetry-HAxis-VAxis,
-    write(Move), nl,
-    testMove(Move).
+nextCell(OldRow, 9, Row, 0) :-
+    Row is OldRow + 1.
+nextCell(OldRow, OldColumn, OldRow, Column) :-
+    Column is OldColumn + 1.    
+*/
 
-testMove(Move) :-
-    Row - Column - Symmetry - HAxis - VAxis = Move,
-    ansi_format([bg(black)], 'row : ~d col : ~d symmetry : ~d HAxis : ~d VAxis : ~d', [Row, Column, Symmetry, HAxis, VAxis]), nl.    
-testMove(Move) :-
-    Row - Column - Symmetry - Axis = Move,
-    ansi_format([bg(black)], 'row : ~d col : ~d symmetry : ~d axis : ~d', [Row, Column, Symmetry, Axis]), nl.
-
-testMove(Board, Move, Piece, NewBoard) :-
-    Row-Column-Symmetry-HAxis-VAxis = Move,
-    getBlockPositions(Board, Row, Column, Piece, Chunk),
-    pointSymmetryPositions(Board, Chunk, HAxis, VAxis, NewChunk),
-    updateBoard(Board, NewChunk, Piece, NewBoard).
-testMove(Board, Move, Piece, NewBoard) :-
+/*
+validMove(Board, Piece, 2, Row, Column, HAxis, VAxis, NewPositions, ValidMove) :-
+    between(0, 9, Row),
+    between(0, 9, Column),
+    between(0, 8, HAxis),
+    between(0, 8, VAxis),
+    getBlockPositions(Board, Row, Column, Piece, Positions),
+    pointSymmetryPositions(Board, Positions, HAxis, VAxis, NewPositions),
+    Axes = HAxis-VAxis,
+    ValidMove = Row-Column-2-Axes.
+validMove(Board, Piece, Symmetry, Row, Column, Axis, NewPositions, ValidMove) :-
+    between(0, 1, Symmetry),
+    between(0, 9, Row),
+    between(0, 9, Column),
+    between(0, 8, Axis),
+    getBlockPositions(Board, Row, Column, Piece, Positions),
+    axialSymmetryPositions(Board, Positions, Symmetry, Axis, NewPositions),
+    ValidMove = Row-Column-Symmetry-Axis.
+*/ 
+/*
+move(Board, Move, Piece, NewBoard) :-
+    %write(Move), nl,
+    Row-Column-Symmetry-Axes = Move,
+    HAxis-VAxis = Axes,
+    %write(Row), write(' '), write(Column), write(' '), write(Symmetry), write(' '), write(HAxis), write(' '), write(VAxis), nl,
+    validMove(Board, Piece, Symmetry, Row, Column, HAxis, VAxis, Positions, _ValidMove),
+    %write(Positions), nl,
+    updateBoard(Board, Positions, Piece, NewBoard).
+move(Board, Move, Piece, NewBoard) :-
     Row-Column-Symmetry-Axis = Move,
-    getBlockPositions(Board, Row, Column, Piece, Chunk),
-    axialSymmetryPositions(Board, Chunk, Symmetry, Axis, NewChunk),
-    updateBoard(Board, NewChunk, Piece, NewBoard).
+    validMove(Board, Piece, Symmetry, Row, Column, Axis, Positions, _ValidMove),
+    %write(Positions), nl,
+    updateBoard(Board, Positions, Piece, NewBoard).
+*/
 
+/*
+% Player - 1 or 2 (it's actually the player piece)
+valid_moves(Board, Piece, ListOfMoves) :-
+    validAxial(Board, Piece, Moves1),
+    validPoint(Board, Piece, Moves2),
+    append(Moves1, Moves2, ListOfMoves),
+    length(ListOfMoves, Length),
+    Length > 0.
 
+validAxial(Board, Piece, Moves) :-
+    setof(Move, validMove(Board, Piece, Symmetry, Row, Column, Axis, _, Move), Moves).
+validAxial(_, _, []).
+
+validPoint(Board, Piece, Moves) :-
+    setof(Move, validMove(Board, Piece, 2, Row, Column, HAxis, VAxis, _, Move), Moves).
+validPoint(_, _, []).
+*/
