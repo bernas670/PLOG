@@ -34,10 +34,17 @@ printBoard(Board) :-
     printMatrix(Board, 1, 97),
     ansi_format([bg(black)], '          r    q    p    o    n    m    l    k    j         ', []), nl,
     ansi_format([bg(black)], '                                                            ', []), nl,
-    value(Board, 1, P1), value(Board, 2, P2),
-    ansi_format([bg(black)], '     Scores         1 : ~d           2 : ~d                 ', [P1, P2]), nl,
+    printScores(Board),
     ansi_format([bg(black)], '                                                            ', []), nl,
     nl.
+
+printScores(Board) :-
+    value(Board, 1, P1), value(Board, 2, P2),
+    ansi_format([bg(black)], '                    ', []),
+    ansi_format([bg(red)], '  ', []), ansi_format([bg(black), fg(red)], ' ~|~`0t~d~2+', [P1]),
+    ansi_format([bg(black)], '          ', []),
+    ansi_format([bg(cyan)], '  ', []), ansi_format([bg(black), fg(cyan)], ' ~|~`0t~d~2+', [P2]), 
+    ansi_format([bg(black)], '                    ', []), nl.
 
 % Get the score of a player from the current
 value(Board, Player, Value):-
