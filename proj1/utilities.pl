@@ -65,7 +65,7 @@ getMatrixColumn([PositionsH|PositionsT], ColIndex, [RowH|RowT]) :-
     getMatrixColumn(PositionsT, ColIndex, RowT).
 
 
-/*
+
 getLongestList([L], L) :-
     !.
 getLongestList([H|T], H) :- 
@@ -74,12 +74,12 @@ getLongestList([H|T], H) :-
     getLongestList(T, X),
     length(X, M),
     write('best : '), write(M), nl,
-    N > M,
+    N >= M,
     !.
 getLongestList([_|T], X) :-
     getLongestList(T, X),
     !.
-*/
+
 /*
 
 FIXME: not used

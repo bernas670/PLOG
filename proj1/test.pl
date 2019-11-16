@@ -61,7 +61,7 @@ testAxialSymmetry :-
     getBlockPositions(Board, 1, 3, 2, NewBoard, [], Pos),
     printBoard(NewBoard),
     write('old pos : '), write(Pos), nl,
-    axialSymmetryPositions(Board, Pos, 0, 2, NewPos),
+    axialSymmetryPositions(Board, Pos, 0, 8, NewPos),
     write('new pos : '), write(NewPos), nl.
 
 testPos :- 
@@ -114,7 +114,7 @@ testValidAxial :-
 testBlockPos :-
     testBoard2(Board),
     printBoard(Board),
-    getBlockPositions(Board, 1, 0, 0, Positions),
+    getBlockPositions(Board, 0, 0, 1, Positions),
     nl, write(Positions), nl.
 
 testGenerateCoords :-
@@ -146,8 +146,21 @@ testValidMoves :-
 testBestMove :-
     testBoard4(Board),
     printBoard(Board),
+    %write('[7-4-2-(5-5),7-4-2-(6-2),7-4-2-(6-3),7-4-2-(7-2),7-4-2-(7-3),7-4-2-(7-4),7-4-2-(7-5),5-7-2-(6-3),5-7-2-(6-6)]'), nl,
+    %write('[5-7-1-3, 0-2-0-0, 3-2-2-(3-1), 0-2-0-4]'), nl,
+    %getBestMove(Board, 1, [5-7-1-3, 0-2-0-0, 3-2-2-(3-1), 0-2-0-4], Move),
+    %getBestMove(Board, 1, [0-5-2-(1-5),0-5-2-(1-6),0-5-2-(2-2),0-5-2-(2-3),0-5-2-(2-4),0-5-2-(2-6),0-5-2-(3-2),0-5-2-(3-5),0-5-2-(3-6),0-5-2-(4-2),0-5-2-(4-3),0-5-2-(4-4),0-5-2-(4-5),0-5-2-(4-6),3-2-0-2,3-2-0-4,3-2-1-1,3-2-1-3,3-2-1-4,3-2-1-5,3-2-2-(2-1),3-2-2-(2-2),3-2-2-(2-3),3-2-2-(2-4),3-2-2-(2-5),3-2-2-(3-1),3-2-2-(3-3),3-2-2-(3-4),3-2-2-(3-5),3-2-2-(4-1),3-2-2-(4-2),3-2-2-(4-3),3-2-2-(4-5),3-2-2-(5-1),3-2-2-(5-4),3-2-2-(5-5),4-2-0-2,4-2-0-4,4-2-1-1,4-2-1-3,4-2-1-4,4-2-1-5,4-2-2-(2-1),4-2-2-(2-2),4-2-2-(2-3),4-2-2-(2-4),4-2-2-(2-5),4-2-2-(3-1),4-2-2-(3-3),4-2-2-(3-4),4-2-2-(3-5),4-2-2-(4-1),4-2-2-(4-2),4-2-2-(4-3),4-2-2-(4-5),4-2-2-(5-1),4-2-2-(5-4),4-2-2-(5-5),4-3-0-2,4-3-0-4,4-3-1-1,4-3-1-3,4-3-1-4,4-3-1-5,4-3-2-(2-1),4-3-2-(2-2),4-3-2-(2-3),4-3-2-(2-4),4-3-2-(2-5),4-3-2-(3-1),4-3-2-(3-3),4-3-2-(3-4),4-3-2-(3-5),4-3-2-(4-1),4-3-2-(4-2),4-3-2-(4-3),4-3-2-(4-5),4-3-2-(5-1),4-3-2-(5-4),4-3-2-(5-5),5-6-0-3,5-6-0-4,5-6-0-6,5-6-1-3,5-6-1-4,5-6-1-5], Move),
+    %valid_moves(Board, 1, ValidMoves),
+    %write(ValidMoves), nl,
+    %getBestMove(Board, 1, ValidMoves, Move),
     choose_move(Board, 1, 2, Move),
     write(Move), nl.
+
+testMoveValue :-
+    testBoard4(Board),
+    printBoard(Board),
+    getMoveValue(Board, 1, 5-7-1-3, Value),
+    write('5-7-1-3   '), write(Value), nl.
 /*
 A failed try at refactoring getBlockPositions :(
 

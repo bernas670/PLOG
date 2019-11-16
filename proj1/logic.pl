@@ -1,4 +1,5 @@
-% Start the game
+% Start of the game, takes the players('P' or 'C') as arguments as well as
+% their levels in case the player is a computer(1 or 2)
 startGame(Player1, P1Level, Player2, P2Level) :-
     initialBoard(InitialBoard),
     printBoard(InitialBoard),
@@ -6,24 +7,32 @@ startGame(Player1, P1Level, Player2, P2Level) :-
     addStartPieces(CastleBoard, Player1, Player2, StartPiecesBoard),
     gameLoop(StartPiecesBoard, Player1, P1Level, Player2, P2Level).
 
-
-% The game loop
-gameLoop(Board, Player1, _P1Level, Player2, _P2Level) :-
-    isGameOver(Board),
+game_over(Board, Winner):-
+    \+valid_moves(Board, 1, _),
+    \+valid_moves(Board, 2, _),
     !,
+    value(Board,1,V1),
+    value(Board,2,V2),
+    getWinner(V1, V2, Winner).
+
+getWinner(Points1, Points2, 1) :-
+    Points1 > Points2.
+getWinner(Points1, Points2, 2) :-
+    Points2 > Points1.
+getWinner(_Points1, _Points2, 0).
+
+printWinner(Winner, Player1, Player2) :-
+    
+
+gameLoop(Board, Player1, _P1Level, Player2, _P2Level) :-
     game_over(Board, Winner),
-    write(Winner).
+    printWinner(Winner, Player1, Player2).
 gameLoop(Board, Player1, P1Level, Player2, P2Level) :-
     playerTurn(Board, Player1, P1Level, 1, NewBoard1),
     playerTurn(NewBoard1, Player2, P2Level, 2, NewBoard2),
     % TODO: check if the players have moves left
     % if there are no moves left game_over, else keep playing
     gameLoop(NewBoard2, Player1, P1Level, Player2, P2Level).
-
-isGameOver(Board) :-
-    \+valid_moves(Board, 1, _),
-    \+valid_moves(Board, 2, _).
-
 
 % playerTurn(Board, Player, PlayerLevel, Piece, NewBoard)
 playerTurn(Board, 'P', _Level, Piece, NewBoard) :-
@@ -56,22 +65,23 @@ choose_move(Board, Piece, 2, Move) :-
     valid_moves(Board, Piece, ValidMoves),
     getBestMove(Board, Piece, ValidMoves, Move).
 
-getBestMove(_Board, _Piece, [BestMove], BestMove) :-
+getMoveValue(Board, Piece, Move, Value) :-
+    Row-Column-_Symmetry-_Axes = Move,
+    getBlockPositions(Board, Row, Column, Piece, Positions),
+    length(Positions, Value).
+
+getBestMove(_Board, _Piece, [BMove], BMove) :-
     !.
-getBestMove(Board, Piece, [HMove|TMove], HMove) :-
-    HRow-HColumn-_Symmetry-_Axes = HMove,
-    getBlockPositions(Board, HRow, HColumn, Piece, HPos),
-    length(HPos, HLength),
-    getBestMove(Board, Piece, TMove, BestMove),
-    BRow-BColumn-_Symmetry-_Axes = BestMove,
-    getBlockPositions(Board, BRow, BColumn, Piece, BPos),
-    length(BPos, BLength),
-    HLength >= BLength,
+getBestMove(Board, Piece, [HMove|TMove], BMove) :-
+    getMoveValue(Board, Piece, HMove, HValue),
+    getBestMove(Board, Piece, TMove, BMove),    
+    getMoveValue(Board, Piece, BMove, BValue),
+    BValue >= HValue,
     !.
-getBestMove(Board, Piece, [_HMove|TMove], BestMove) :-
-    getBestMove(Board, Piece, TMove, BestMove),
+getBestMove(_, _, [HMove|_], HMove) :-
     !.
-    
+
+
 % getChunk(Board, Player, Piece, Positions)
 getBlock(Board, Piece, Row, Column) :-
     ansi_format([bg(black)], '            PLAYER ~d : Choose one of your blocks            ', [Piece]), nl,
@@ -196,14 +206,4 @@ getBlockPositions(Board, Block, Row, Column, NewBoard, Positions, NewPositions) 
 % If the Row or Column parameters are invalid return
 getBlockPositions(Board, _Block, _Row, _Column, Board, Positions, Positions).
 
-game_over(Board,Winner):-
-    value(Board,1,C1),
-    value(Board,2,C2),
-    (   C1 > C2 ->
-    ansi_format([bg(black), fg(red)], '                         PLAYER 1 WON :D                         ',[]), nl
-    ;   C1 =:= C2 ->
-    ansi_format([bg(black), fg(red)], '                         ITS A DRAW :S                         ',[]), nl
-    ;   ansi_format([bg(black), fg(red)], '                     PLAYER 2 WON :D                         ',[]), nl
-    ),
-    % TODO: remove this, it's only here because of the singleton warning
-    write(Winner), nl.
+
