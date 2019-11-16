@@ -39,7 +39,8 @@ printBoard(Board) :-
     ansi_format([bg(black)], '                                                            ', []), nl,
     nl.
 
-value(Board,Player,Value):-
+% Get the score of a player from the current
+value(Board, Player, Value):-
     countItemsMatrix(Board,Player,Value).
 
 % Print the contents of the matrix

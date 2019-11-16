@@ -11,8 +11,8 @@ game_over(Board, Winner):-
     \+valid_moves(Board, 1, _),
     \+valid_moves(Board, 2, _),
     !,
-    value(Board,1,V1),
-    value(Board,2,V2),
+    value(Board, 1, V1),
+    value(Board, 2, V2),
     getWinner(V1, V2, Winner).
 
 getWinner(Points1, Points2, 1) :-
@@ -21,8 +21,13 @@ getWinner(Points1, Points2, 2) :-
     Points2 > Points1.
 getWinner(_Points1, _Points2, 0).
 
-printWinner(Winner, Player1, Player2) :-
-    
+printWinner(0, _, _) :-
+    write('draw').
+printWinner(1, Player1, _) :-
+    write('player1').
+printWinner(2, _, Player2) :-
+    write('player2').
+
 
 gameLoop(Board, Player1, _P1Level, Player2, _P2Level) :-
     game_over(Board, Winner),
