@@ -1,5 +1,3 @@
-% TODO: make the board size dynamic
-
 % Initial state of the board
 initialBoard([ 
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -38,6 +36,7 @@ printBoard(Board) :-
     ansi_format([bg(black)], '                                                            ', []), nl,
     nl.
 
+% Print the scores at the bottom of the board
 printScores(Board) :-
     value(Board, 1, P1), value(Board, 2, P2),
     ansi_format([bg(black)], '                    ', []),
