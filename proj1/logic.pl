@@ -12,8 +12,8 @@ startGame(Player1, P1Level, Player2, P2Level) :-
     addStartPieces(CastleBoard, Player1, Player2, StartPiecesBoard),
     gameLoop(StartPiecesBoard, Player1, P1Level, Player2, P2Level).
 
-% Checks if the game is over, when both players have no moves left,
-% and returns the winner in case the game is over
+% Checks if the game is over, when both players have no moves
+% left, and returns the winner in case the game is over
 game_over(Board, Winner):-
     \+valid_moves(Board, 1, _),
     \+valid_moves(Board, 2, _),
