@@ -1,5 +1,3 @@
-% TODO: document this code
-
 % get list element at index
 getListItem([Item|_], 0, Item).
 getListItem([_|List], Index, Item) :-
@@ -30,18 +28,6 @@ setMatrixItem([H|T], Row, Column, Item, [H|NewT]) :-
     NewRow is Row - 1,
     setMatrixItem(T, NewRow, Column, Item, NewT).
 
-/*
-% copy a list to another one
-copyList([], []).
-copyList([H|OriginT], [H|CopyT]) :-
-    copyList(OriginT, CopyT).
-
-% copy a matrix to a new matrix
-copyMatrix([], []).
-copyMatrix([OriginH|OriginT], [CopyH|CopyT]) :-
-    copyList(OriginH, CopyH),
-    copyMatrix(OriginT, CopyT).
-*/
 % counts how many times an item appears at a list
 countItemsList([], _Item, 0).
 countItemsList([H|T], Item, Count) :-
@@ -58,11 +44,3 @@ countItemsMatrix([H|T], Item, Count):-
     countItemsList(H, Item, Count2),
     countItemsMatrix(T, Item, Count1),
     Count is Count1 + Count2.
-
-/*
-% Get the column with ColIndex from a matrix
-getMatrixColumn([], _Column, []).
-getMatrixColumn([PositionsH|PositionsT], ColIndex, [RowH|RowT]) :-
-    getListItem(PositionsH, ColIndex, RowH),
-    getMatrixColumn(PositionsT, ColIndex, RowT).
-*/
