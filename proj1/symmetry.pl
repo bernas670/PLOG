@@ -1,23 +1,27 @@
+% Check if the cell with coordinates [Row, Column] = Coords is empty
 isEmpty(Board, Coords) :-
     getListItem(Coords, 0, Row),    
     getListItem(Coords, 1, Column),    
     getMatrixItem(Board, Row, Column, Piece),
     Piece == 0.
 
+% Validate the parameters to perform a new symmetry
+% The code is separated because the Axes parameter is a composite (HAxis-VAxis)
+% when a point symmetry is being performed
+% For axial symmetries
 symmetry(Board, Pos, Symmetry, Axes, NewPos) :-
     between(0, 1, Symmetry),
     between(0, 8, Axes),    
     axialSymmetryPositions(Board, Pos, Symmetry, Axes, NewPos).
+% For point symmetries
 symmetry(Board, Pos, 2, Axes, NewPos) :-
     HAxis-VAxis = Axes,
     between(0, 8, HAxis),
     between(0, 8, VAxis),
     pointSymmetryPositions(Board, Pos, HAxis, VAxis, NewPos).
 
-    
-
-    
-
+% Calculate the new positions resulting of an axial symmetry
+% Orientation : 0 - Horizontal , 1 - Vertical
 axialSymmetryPositions(_Board, [], _Orientation, _Axis, []).
 axialSymmetryPositions(Board, [HPos|TPos], Orientation, Axis, [HRes|TRes]) :-
     getListItem(HPos, Orientation, Coord),  
@@ -27,6 +31,7 @@ axialSymmetryPositions(Board, [HPos|TPos], Orientation, Axis, [HRes|TRes]) :-
     isEmpty(Board, HRes), !,
     axialSymmetryPositions(Board, TPos, Orientation, Axis, TRes).
 
+% Calculate the new positions resulting of a point symmetry
 pointSymmetryPositions(_Board, [], _HAxis, _VAxis, []).
 pointSymmetryPositions(Board, [HPos|TPos], HAxis, VAxis, [HRes|TRes]) :-
     blockPointSymmetry(HPos, HAxis, VAxis, HRes),

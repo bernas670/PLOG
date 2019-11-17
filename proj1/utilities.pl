@@ -30,6 +30,7 @@ setMatrixItem([H|T], Row, Column, Item, [H|NewT]) :-
     NewRow is Row - 1,
     setMatrixItem(T, NewRow, Column, Item, NewT).
 
+/*
 % copy a list to another one
 copyList([], []).
 copyList([H|OriginT], [H|CopyT]) :-
@@ -40,7 +41,7 @@ copyMatrix([], []).
 copyMatrix([OriginH|OriginT], [CopyH|CopyT]) :-
     copyList(OriginH, CopyH),
     copyMatrix(OriginT, CopyT).
-
+*/
 % counts how many times an item appears at a list
 countItemsList([], _Item, 0).
 countItemsList([H|T], Item, Count) :-
@@ -58,37 +59,10 @@ countItemsMatrix([H|T], Item, Count):-
     countItemsMatrix(T, Item, Count1),
     Count is Count1 + Count2.
 
+/*
 % Get the column with ColIndex from a matrix
 getMatrixColumn([], _Column, []).
 getMatrixColumn([PositionsH|PositionsT], ColIndex, [RowH|RowT]) :-
     getListItem(PositionsH, ColIndex, RowH),
     getMatrixColumn(PositionsT, ColIndex, RowT).
-
-
-
-getLongestList([L], L) :-
-    !.
-getLongestList([H|T], H) :- 
-    length(H, N),
-    write('head : '), write(N), nl,
-    getLongestList(T, X),
-    length(X, M),
-    write('best : '), write(M), nl,
-    N >= M,
-    !.
-getLongestList([_|T], X) :-
-    getLongestList(T, X),
-    !.
-
-/*
-
-FIXME: not used
-
-% get the max value of a list
-max_list([H|T], R):- max(T, H, R). 
-max([], R, R). 
-max([H|T], AUX, R):- H >  AUX, max(T, H, R). 
-max([H|T], AUX, R):- H =< AUX, max(T, AUX, R).
-
-
 */

@@ -117,6 +117,12 @@ testBlockPos :-
     getBlockPositions(Board, 0, 0, 1, Positions),
     nl, write(Positions), nl.
 
+testNewPos :-
+    testBoard2(Board),
+    printBoard(Board),
+    pos(Board, 7, 2, 1, Positions),
+    nl, write(Positions), nl.
+
 testGenerateCoords :-
     testBoard2(Board),
     printBoard(Board),
@@ -161,6 +167,41 @@ testMoveValue :-
     printBoard(Board),
     getMoveValue(Board, 1, 5-7-1-3, Value),
     write('5-7-1-3   '), write(Value), nl.
+
+testWinner :-
+    printWinner(0),
+    printWinner(1),
+    printWinner(2).
+
+pos(Board, Row, Column, Block, Positions) :-
+    getMatrixItem(Board, Row, Column, Piece),
+    Piece == Block,
+    pos(Board, Block, Row, Column, _NewBoard, [], Positions).
+% Positions must be an empty list
+pos(Board, Block, Row, Column, NewBoard, Positions, NewPositions) :-
+    between(0, 9, Row),
+    between(0, 9, Column),
+    getMatrixItem(Board, Row, Column, Item),
+    % check if the cell on the given position contains the expected piece
+    Block == Item, !,
+    setMatrixItem(Board, Row, Column, 0, NewBoard1),
+    append([Row], [Column], Coords),
+    append([Coords], Positions, NewPositions1),
+    % check the cell bellow
+    Row1 is Row + 1,
+    pos(NewBoard1, Block, Row1, Column, NewBoard2, NewPositions1, NewPositions2),
+    % check the cell above
+    Row2 is Row - 1,
+    pos(NewBoard2, Block, Row2, Column, NewBoard3, NewPositions2, NewPositions3),
+    %check the cell to the right
+    Column1 is Column + 1,
+    pos(NewBoard3, Block, Row, Column1, NewBoard4, NewPositions3, NewPositions4),
+    % check the cell to the left
+    Column2 is Column - 1,
+    pos(NewBoard4, Block, Row, Column2, NewBoard, NewPositions4, NewPositions).
+% If the Row or Column parameters are invalid return
+pos(Board, _Block, _Row, _Column, Board, Positions, Positions).
+
 /*
 A failed try at refactoring getBlockPositions :(
 
