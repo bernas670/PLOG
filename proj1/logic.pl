@@ -50,7 +50,6 @@ gameLoop(Board, _Player1, _P1Level, _Player2, _P2Level) :-
 gameLoop(Board, Player1, P1Level, Player2, P2Level) :-
     playerTurn(Board, Player1, P1Level, 1, NewBoard1),
     playerTurn(NewBoard1, Player2, P2Level, 2, NewBoard2),
-    % TODO: check if the players have moves left
     % if there are no moves left game_over, else keep playing
     gameLoop(NewBoard2, Player1, P1Level, Player2, P2Level).
 

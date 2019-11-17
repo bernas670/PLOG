@@ -87,3 +87,34 @@ updateBoard(Board, [HPos|TPos], Piece, NewBoard) :-
     getListItem(HPos, 1, Column),
     setMatrixItem(Board, Row, Column, Piece, NewBoard1),
     updateBoard(NewBoard1, TPos, Piece, NewBoard).
+
+
+
+% Board examples present in the report
+intermidiateBoard([
+    [0, 0, 1, 0, 2, 1, 0, 2, 0, 3],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 1, 2, 3, 0, 0, 0, 0],
+    [0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 2, 2, 0, 0],
+    [0, 0, 0, 3, 0, 0, 0, 3, 0, 0],
+    [0, 0, 1, 1, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 2, 2, 0, 0],
+    [0, 0, 0, 0, 0, 0, 2, 2, 0, 0]]).
+    
+finalBoard([ 
+    [0, 1, 1, 0, 2, 1, 1, 2, 2, 3],
+    [0, 1, 1, 0, 2, 1, 1, 2, 2, 0],
+    [0, 0, 2, 2, 2, 1, 1, 1, 1, 0],
+    [1, 1, 1, 1, 2, 3, 0, 2, 2, 0],
+    [1, 1, 1, 1, 0, 0, 0, 2, 2, 0],
+    [0, 0, 2, 2, 2, 2, 2, 2, 0, 0],
+    [2, 2, 0, 3, 0, 0, 0, 3, 0, 1],
+    [2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
+    [2, 2, 2, 2, 0, 0, 2, 2, 2, 2],
+    [2, 2, 2, 2, 0, 0, 2, 2, 2, 2]]).
+    
+printInitial :- initialBoard(B), printBoard(B).
+printIntermidiate :- intermidiateBoard(B), printBoard(B).
+printFinal :- finalBoard(B), printBoard(B).
