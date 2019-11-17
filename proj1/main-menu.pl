@@ -1,3 +1,5 @@
+:- include('logic.pl').
+
 % Main menu
 mainMenu :-
     printMainMenu,

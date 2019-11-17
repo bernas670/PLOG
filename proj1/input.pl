@@ -1,6 +1,5 @@
 askCoord(Coord, String) :-
-    % TODO: make this prompt always 60 chars long
-    ansi_format([bg(black)], '    ~w  ', [String]), nl,
+    ansi_format([bg(black)], '                    ~w                    ', [String]), nl,
     read(Input),
     validateCoord(Input, Coord, String).
 
@@ -22,10 +21,8 @@ askCoords(Row, Column) :-
     askCoord(Column, 'Column'),
     !.
 
-
 askAxis(Axis, String) :-
-    % TODO: make this prompt always 60 chars long
-    ansi_format([bg(black)], '   ~w Axis:    ', [String]), nl,
+    ansi_format([bg(black)], '                    ~w Axis                    ', [String]), nl,
     read(Input),
     validateAxis(Input, Axis, String).
 
@@ -56,12 +53,11 @@ askPoint(HAxis, VAxis) :-
     askAxis(VAxis, 'Vertical'),
     !.
 
-
 askSymmetry(Symmetry, Axis) :-
     ansi_format([bg(black)], '    Symmetry type :                                         ', []), nl,
-    ansi_format([bg(black)], '          1) Axial Horizontal                               ', []), nl,
-    ansi_format([bg(black)], '          2) Axial Vertical                                 ', []), nl,
-    ansi_format([bg(black)], '          3) Point                                          ', []), nl,
+    ansi_format([bg(black)], '          [1] Axial Horizontal                              ', []), nl,
+    ansi_format([bg(black)], '          [2] Axial Vertical                                ', []), nl,
+    ansi_format([bg(black)], '          [3] Point                                         ', []), nl,
     ansi_format([bg(black)], '                  Waiting for an option...                  ', []), nl,
     read(Input),
     validateSymmetry(Input, Symmetry, Axis).

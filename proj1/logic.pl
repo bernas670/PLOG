@@ -1,3 +1,8 @@
+:- include('board.pl').
+:- include('input.pl').
+:- include('symmetry.pl').
+:- include('utilities.pl').
+
 % Start of the game, takes the players('P' or 'C') as arguments as well as
 % their levels in case the player is a computer(1 or 2)
 startGame(Player1, P1Level, Player2, P2Level) :-
