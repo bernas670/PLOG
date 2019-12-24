@@ -70,11 +70,11 @@ surround_rest(CurPos, PrvPos, OutPos) :-
     CurIPos-CurFPos = CurPos,
     PrvIPos-PrvFPos = PrvPos,
 
-    CurIPos #\= PrvIPos - 1, CurIPos #\= PrvIPos + 1, 
-    CurIPos #\= PrvFPos - 1, CurIPos #\= PrvFPos + 1, 
+    CurIPos #\= PrvIPos - 1, CurIPos #\= PrvIPos + 1, CurIPos #\= PrvIPos,
+    CurIPos #\= PrvFPos - 1, CurIPos #\= PrvFPos + 1, CurIPos #\= PrvFPos,
     
-    CurFPos #\= PrvIPos - 1, CurFPos #\= PrvIPos + 1, 
-    CurFPos #\= PrvFPos - 1, CurFPos #\= PrvFPos + 1, 
+    CurFPos #\= PrvIPos - 1, CurFPos #\= PrvIPos + 1, CurFPos #\= PrvIPos,
+    CurFPos #\= PrvFPos - 1, CurFPos #\= PrvFPos + 1, CurFPos #\= PrvFPos,
 
     OutPos = CurIPos-CurFPos.
 
