@@ -41,3 +41,4 @@ Repository of code developed for the course PLOG (Logic Programming) at FEUP
 * [is Operator](http://www.cse.unsw.edu.au/~billw/dictionaries/prolog/is.html)
 * [Lists](https://www.doc.gold.ac.uk/~mas02gw/prolog_tutorial/prologpages/lists.html)
 * [Format](https://www.swi-prolog.org/pldoc/man?predicate=format%2f2)
+* [Sicstus clpfd docs](https://sicstus.sics.se/sicstus/docs/3.7.1/html/sicstus_33.html)

@@ -1,5 +1,6 @@
 :-use_module(library(clpfd)).
 :-use_module(library(lists)).
+:-use_module(library(random)).
 
 :- include('puzzles.pl').
 :- include('display.pl').
@@ -10,12 +11,13 @@ solve(Number) :-
     puzzle(Number, Col, Row),
     format('~nPuzzle Nr ~d~n~n', [Number]),
     statistics(runtime, _),
-    solve_puzzle(Col, Row),
+    solve_puzzle(Col, Row, Board),
     statistics(runtime, [_, Time|_]),
+    print_board(Board, Col, Row),
     format('~nExecution time : ~d ms~n~n', [Time]).
 
 
-solve_puzzle(Col, Row) :-
+solve_puzzle(Col, Row, Board) :-
     length(Col, ColSize),
     length(Row, RowSize),
 
@@ -30,8 +32,8 @@ solve_puzzle(Col, Row) :-
     itr_line(Col, TBoard, ColSize, (-2)-(-2)),
 
 % TODO: change labeling
-    labeling([], FlatBoard),
-    print_board(Board, Col, Row).
+% leftmost, step, up, all
+    labeling([], FlatBoard).
     
 
 itr_line([], [], _Length, _Pos).
@@ -46,41 +48,35 @@ itr_line([HRow|TRow], [HBoard|TBoard], Length, InPos) :-
 % Line - line that the restrictions will be applied to
 % InPos - tuple containing the positions of the 1s on the previous line
 % OutPos - tuple containing the positions of the 1s on the current line
-space_rest(Space, Line, InPos, OutPos) :-
-    var(Space),
-    element(IPos, Line, 1),
-    element(FPos, Line, 1),
-    FPos - IPos #> 1,
+space_rest(Space, Line, PrvPos, OutPos) :-
+    var(Space),     % checks if Space is a variable or a value
 
-% TODO: encapsulate this part
-    % get tuple content
-    InIPos-InFPos = InPos,
+    element(CurIPos, Line, 1),
+    element(CurFPos, Line, 1),
 
-    IPos #\= InIPos - 1, IPos #\= InIPos + 1, 
-    IPos #\= InFPos - 1, IPos #\= InFPos + 1, 
+    CurFPos - CurIPos #> 1,
+
+    surround_rest(CurIPos-CurFPos, PrvPos, OutPos).
+space_rest(Space, Line, PrvPos, OutPos) :-
+    element(CurIPos, Line, 1),
+    element(CurFPos, Line, 1),
     
-    FPos #\= InIPos - 1, FPos #\= InIPos + 1, 
-    FPos #\= InFPos - 1, FPos #\= InFPos + 1, 
-
-    % create output tuple 
-    OutPos = IPos - FPos.
-space_rest(Space, Line, InPos, OutPos) :-
-    element(IPos, Line, 1),
-    element(FPos, Line, 1),
     NSpace is Space + 1,
-    FPos - IPos #= NSpace,
+    CurFPos - CurIPos #= NSpace,
 
-    % get tuple content
-    InIPos-InFPos = InPos,
+    surround_rest(CurIPos-CurFPos, PrvPos, OutPos).
 
-    IPos #\= InIPos - 1, IPos #\= InIPos + 1, 
-    IPos #\= InFPos - 1, IPos #\= InFPos + 1, 
+surround_rest(CurPos, PrvPos, OutPos) :-
+    CurIPos-CurFPos = CurPos,
+    PrvIPos-PrvFPos = PrvPos,
+
+    CurIPos #\= PrvIPos - 1, CurIPos #\= PrvIPos + 1, 
+    CurIPos #\= PrvFPos - 1, CurIPos #\= PrvFPos + 1, 
     
-    FPos #\= InIPos - 1, FPos #\= InIPos + 1, 
-    FPos #\= InFPos - 1, FPos #\= InFPos + 1, 
+    CurFPos #\= PrvIPos - 1, CurFPos #\= PrvIPos + 1, 
+    CurFPos #\= PrvFPos - 1, CurFPos #\= PrvFPos + 1, 
 
-    % create output tuple 
-    OutPos = IPos - FPos.
+    OutPos = CurIPos-CurFPos.
 
 generate_board(Cols, Rows, Board) :-
     length_list(Rows, Board),
@@ -88,3 +84,8 @@ generate_board(Cols, Rows, Board) :-
 
 length_list(Int, List) :-
     length(List, Int).
+
+    
+  
+selRandom(ListOfVars, Var, Rest):-
+    random_select(Var, ListOfVars, Rest).
