@@ -7,17 +7,17 @@
 
 
 
-solve(Number) :-
+solve_puzzle(Number, Board) :-
     puzzle(Number, Col, Row),
     format('~nPuzzle Nr ~d~n~n', [Number]),
-    statistics(runtime, _),
-    solve_puzzle(Col, Row, Board),
-    statistics(runtime, [_, Time|_]),
+    statistics(walltime, [Start, _]),
+    solve_puzzle([min], Col, Row, Board),
+    statistics(walltime, [End, _]),
     print_board(Board, Col, Row),
-    format('~nExecution time : ~d ms~n~n', [Time]).
+    Time is End - Start,
+    format('~nExecution time : ~3d s~n~n', [Time]).
 
-
-solve_puzzle(Col, Row, Board) :-
+solve_puzzle(LOptions, Col, Row, Board) :-
     length(Col, ColSize),
     length(Row, RowSize),
 
@@ -25,16 +25,12 @@ solve_puzzle(Col, Row, Board) :-
 
     append(Board, FlatBoard),
     domain(FlatBoard, 0, 1),
-
-% TODO: try messing around with the starting coordinates
+    
     itr_line(Row, Board, RowSize, (-2)-(-2)),
     transpose(Board, TBoard),
     itr_line(Col, TBoard, ColSize, (-2)-(-2)),
-
-% TODO: change labeling
-% leftmost, step, up, all
-    labeling([], FlatBoard).
     
+    labeling(LOptions, FlatBoard).
 
 itr_line([], [], _Length, _Pos).
 itr_line([HRow|TRow], [HBoard|TBoard], Length, InPos) :-
@@ -49,8 +45,7 @@ itr_line([HRow|TRow], [HBoard|TBoard], Length, InPos) :-
 % InPos - tuple containing the positions of the 1s on the previous line
 % OutPos - tuple containing the positions of the 1s on the current line
 space_rest(Space, Line, PrvPos, OutPos) :-
-    var(Space),     % checks if Space is a variable or a value
-
+    var(Space), !,
     element(CurIPos, Line, 1),
     element(CurFPos, Line, 1),
 
@@ -85,7 +80,5 @@ generate_board(Cols, Rows, Board) :-
 length_list(Int, List) :-
     length(List, Int).
 
-    
-  
 selRandom(ListOfVars, Var, Rest):-
     random_select(Var, ListOfVars, Rest).

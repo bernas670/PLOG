@@ -1,8 +1,8 @@
-print_board([]).
 print_board(Board, Col, Row) :-
     write('   '),
     print_elems(Col),
-    print_row(Row, Board).
+    print_row(Row, Board),
+    !.
 
 print_row([], []).
 print_row([HRow|TRow], [HBoard|TBoard]) :-
@@ -15,7 +15,6 @@ print_row([HRow|TRow], [HBoard|TBoard]) :-
     print_elems(HBoard),
     print_row(TRow, TBoard).
 
-    
 print_elems([]) :- nl.
 print_elems([H|T]) :-
     var(H),
