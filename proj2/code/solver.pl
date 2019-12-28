@@ -1,17 +1,8 @@
-:-use_module(library(clpfd)).
-:-use_module(library(lists)).
-:-use_module(library(random)).
-
-:- include('puzzles.pl').
-:- include('display.pl').
-
-
-
 solve_puzzle(Number, Board) :-
     puzzle(Number, Col, Row),
     format('~nPuzzle Nr ~d~n~n', [Number]),
     statistics(walltime, [Start, _]),
-    solve_puzzle([min], Col, Row, Board),
+    solve_puzzle([], Col, Row, Board),
     statistics(walltime, [End, _]),
     print_board(Board, Col, Row),
     Time is End - Start,
@@ -80,5 +71,3 @@ generate_board(Cols, Rows, Board) :-
 length_list(Int, List) :-
     length(List, Int).
 
-selRandom(ListOfVars, Var, Rest):-
-    random_select(Var, ListOfVars, Rest).
