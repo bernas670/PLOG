@@ -78,12 +78,50 @@ selRandom(Var, _Rest, BB0, BB1) :-
         later_bound(BB0, BB1), Var#\= Value 
     ).
 
-generate2(PuzzleNumber, Size, NumHints).
+generate2(PuzzleNumber, Size, NumHints) :-
+    % generate the Col and Row hints
+    length(Col, Size),
+    length(Row, Size),
 
+    generate_hints(NumHints, Col, Row),
+    nl, write(Col), nl, write(Row), nl,
+    solve_puzzle([down], Col, Row, Board),
+    print_board(Board, Col, Row).
+
+generate_hints(0, _, _) :- !.
+generate_hints(Number, Col, Row) :-
+    write(Number), nl,
+    random(0, 2, Rand),
+    generate_hint(Rand, Col, Row),
+    NNumber is Number - 1,
+    generate_hints(NNumber, Col, Row).
+
+generate_hint(0, Col, _Row) :- random_dist(Col).
+generate_hint(1, _Col, Row) :- random_dist(Row).
+
+random_dist(HintList) :-
+    length(HintList, Length),
+    random_member(Hint, HintList),
+    var(Hint),
+    MaxDist is Length - 1,
+    random(1, MaxDist, Hint).
+random_dist(HintList) :- random_dist(HintList).
+
+
+
+
+% Get the path to the puzzle file
+% 
+% Path - path to the file
 puzzle_path(Path) :-
     current_directory(Dir),
     atom_concat(Dir, 'puzzles.pl', Path).
 
+% Save a puzzle on the puzzles file
+% 
+% PuzzleNumber - number of the puzzle
+% Col - the list of hints for the columns
+% Row - the list of hints for the rows
 save_puzzle(PuzzleNumber, Col, Row) :-
     puzzle_path(PuzzlePath),
     Term =.. ['puzzle', PuzzleNumber, Col, Row],
