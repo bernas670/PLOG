@@ -1,3 +1,9 @@
+% Predicate used for collecting data about varying labeling 
+% options for one puzzle
+% 
+% Number - number of the puzzle
+% Options - labeling options
+% Board - solved puzzle
 labeling_test(Number, Options, Board) :-
     puzzle(Number, Col, Row),
     format('~nPuzzle Nr ~d~n~n', [Number]),
@@ -8,9 +14,12 @@ labeling_test(Number, Options, Board) :-
     Time is End - Start,
     format('~nExecution time : ~3d s~n~n', [Time]).
 
+% Predicate used for collecting data about varying labeling 
+% options for all puzzles
+% 
+% Options - labeling options
 labeling_test(Options) :-
     it_test(Options, 1).
-    
 it_test(Options, Number) :-
     puzzle(Number, Col, Row),
     statistics(walltime, [Start, _]),

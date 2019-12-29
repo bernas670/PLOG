@@ -2,6 +2,7 @@
 % random variable and value labeling options and, after coming to a solution,
 % randomly selects columns and rows and generates the hints for that solution.
 % 
+% PuzzleNumber - number with which the generated puzzle will be saved
 % Size - the size of the puzzle
 % NumHints - the desired number of hints
 generate1(PuzzleNumber, Size, NumHints) :-
@@ -78,6 +79,13 @@ selRandom(Var, _Rest, BB0, BB1) :-
         later_bound(BB0, BB1), Var#\= Value 
     ).
 
+% Generates a random puzzle. First generates random hints, then tries to solve the 
+% resulting puzzle. If it is successful saves the puzzle, otherwise keeps generating 
+% new hints until it is successful.
+% 
+% PuzzleNumber - number with which the generated puzzle will be saved
+% Size - the size of the puzzle
+% NumHints - the desired number of hints
 generate2(PuzzleNumber, Size, NumHints) :-
     % generate the Col and Row hints
     length(Col, Size),
@@ -86,8 +94,15 @@ generate2(PuzzleNumber, Size, NumHints) :-
     generate_hints(NumHints, Col, Row),
     nl, write(Col), nl, write(Row), nl,
     solve_puzzle([down], Col, Row, Board),
-    print_board(Board, Col, Row).
+    print_board(Board, Col, Row),
+    save_puzzle(PuzzleNumber, Col, Row).
 
+% Generate the desired number of hints for a puzzle. Each time randomly chooses if the 
+% hint will be placed on the row or column.
+% 
+% Number - the desired number of hints
+% Col - list of hints for the columns
+% Row - list of hints for the rows
 generate_hints(0, _, _) :- !.
 generate_hints(Number, Col, Row) :-
     write(Number), nl,
@@ -96,9 +111,12 @@ generate_hints(Number, Col, Row) :-
     NNumber is Number - 1,
     generate_hints(NNumber, Col, Row).
 
+% Generate an hint for the columns
 generate_hint(0, Col, _Row) :- random_dist(Col).
+% Generate an hint for the rows
 generate_hint(1, _Col, Row) :- random_dist(Row).
 
+% Generates a random distance for an hint list
 random_dist(HintList) :-
     length(HintList, Length),
     random_member(Hint, HintList),
