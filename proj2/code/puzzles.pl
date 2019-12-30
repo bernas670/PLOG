@@ -1,4 +1,4 @@
-% puzzle(Number, Col, Row)
+% puzzle(Number, Col, Row).
 % 
 % Number - number of the puzzle
 % Col - spacing between the corresponding column elements
