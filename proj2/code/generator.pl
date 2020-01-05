@@ -6,6 +6,8 @@
 % Size - the size of the puzzle
 % NumHints - the desired number of hints
 generate1(PuzzleNumber, Size, NumHints) :-
+    NumHints =< Size + Size,
+
     % generate the Col and Row hints
     length(Col, Size),
     length(Row, Size),
@@ -87,12 +89,13 @@ selRandom(Var, _Rest, BB0, BB1) :-
 % Size - the size of the puzzle
 % NumHints - the desired number of hints
 generate2(PuzzleNumber, Size, NumHints) :-
+    NumHints =< Size + Size,
+
     % generate the Col and Row hints
     length(Col, Size),
     length(Row, Size),
 
     generate_hints(NumHints, Col, Row),
-    nl, write(Col), nl, write(Row), nl,
     solve_puzzle([down], Col, Row, Board),
     print_board(Board, Col, Row),
     save_puzzle(PuzzleNumber, Col, Row).
@@ -105,7 +108,6 @@ generate2(PuzzleNumber, Size, NumHints) :-
 % Row - list of hints for the rows
 generate_hints(0, _, _) :- !.
 generate_hints(Number, Col, Row) :-
-    write(Number), nl,
     random(0, 2, Rand),
     generate_hint(Rand, Col, Row),
     NNumber is Number - 1,
